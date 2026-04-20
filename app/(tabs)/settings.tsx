@@ -36,11 +36,11 @@ const WEEKDAY_OPTIONS = [
     { value: 6, label: "Sat" },
 ] as const;
 
-const REMINDER_MODES: Array<{
+const REMINDER_MODES: {
     value: ReminderMode;
     label: string;
     description: string;
-}> = [
+}[] = [
     {
         value: "daily",
         label: "Daily",
