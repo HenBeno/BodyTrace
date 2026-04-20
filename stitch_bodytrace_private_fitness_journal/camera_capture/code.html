@@ -1,189 +1,302 @@
-<!DOCTYPE html>
+<!doctype html>
 
-<html class="dark" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script id="tailwind-config">
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
       tailwind.config = {
         darkMode: "class",
         theme: {
           extend: {
-            "colors": {
-                    "on-secondary-container": "#acc3ce",
-                    "primary-fixed": "#c7e7fa",
-                    "surface-container-highest": "#252626",
-                    "tertiary-container": "#9facf4",
-                    "secondary-dim": "#8ba1ac",
-                    "outline": "#767575",
-                    "surface": "#0e0e0e",
-                    "error-container": "#7f2927",
-                    "primary-dim": "#9ebdd0",
-                    "surface-container-low": "#131313",
-                    "tertiary": "#aebaff",
-                    "on-primary-fixed-variant": "#425f70",
-                    "on-primary-fixed": "#254352",
-                    "tertiary-fixed": "#9facf4",
-                    "on-background": "#e7e5e5",
-                    "primary-container": "#2c4a5a",
-                    "on-error-container": "#ff9993",
-                    "error": "#ee7d77",
-                    "on-tertiary": "#283575",
-                    "error-dim": "#bb5551",
-                    "surface-dim": "#0e0e0e",
-                    "on-tertiary-fixed-variant": "#263474",
-                    "surface-container": "#191a1a",
-                    "on-tertiary-container": "#1d2b6a",
-                    "primary-fixed-dim": "#bad9ec",
-                    "on-primary": "#254453",
-                    "secondary-fixed": "#cfe6f2",
-                    "surface-tint": "#accbde",
-                    "primary": "#accbde",
-                    "tertiary-dim": "#929fe6",
-                    "on-secondary-fixed-variant": "#495f69",
-                    "on-error": "#490106",
-                    "surface-variant": "#252626",
-                    "inverse-primary": "#456373",
-                    "background": "#0e0e0e",
-                    "surface-container-lowest": "#000000",
-                    "secondary": "#8ba1ac",
-                    "inverse-on-surface": "#565555",
-                    "inverse-surface": "#fcf9f8",
-                    "on-surface-variant": "#acabaa",
-                    "on-primary-container": "#b5d5e8",
-                    "on-tertiary-fixed": "#000f4f",
-                    "tertiary-fixed-dim": "#929fe6",
-                    "surface-bright": "#2b2c2c",
-                    "on-surface": "#e7e5e5",
-                    "secondary-container": "#293e48",
-                    "surface-container-high": "#1f2020",
-                    "on-secondary": "#0d232b",
-                    "on-secondary-fixed": "#2d424c",
-                    "secondary-fixed-dim": "#c1d8e4",
-                    "outline-variant": "#484848"
+            colors: {
+              "on-secondary-container": "#acc3ce",
+              "primary-fixed": "#c7e7fa",
+              "surface-container-highest": "#252626",
+              "tertiary-container": "#9facf4",
+              "secondary-dim": "#8ba1ac",
+              outline: "#767575",
+              surface: "#0e0e0e",
+              "error-container": "#7f2927",
+              "primary-dim": "#9ebdd0",
+              "surface-container-low": "#131313",
+              tertiary: "#aebaff",
+              "on-primary-fixed-variant": "#425f70",
+              "on-primary-fixed": "#254352",
+              "tertiary-fixed": "#9facf4",
+              "on-background": "#e7e5e5",
+              "primary-container": "#2c4a5a",
+              "on-error-container": "#ff9993",
+              error: "#ee7d77",
+              "on-tertiary": "#283575",
+              "error-dim": "#bb5551",
+              "surface-dim": "#0e0e0e",
+              "on-tertiary-fixed-variant": "#263474",
+              "surface-container": "#191a1a",
+              "on-tertiary-container": "#1d2b6a",
+              "primary-fixed-dim": "#bad9ec",
+              "on-primary": "#254453",
+              "secondary-fixed": "#cfe6f2",
+              "surface-tint": "#accbde",
+              primary: "#accbde",
+              "tertiary-dim": "#929fe6",
+              "on-secondary-fixed-variant": "#495f69",
+              "on-error": "#490106",
+              "surface-variant": "#252626",
+              "inverse-primary": "#456373",
+              background: "#0e0e0e",
+              "surface-container-lowest": "#000000",
+              secondary: "#8ba1ac",
+              "inverse-on-surface": "#565555",
+              "inverse-surface": "#fcf9f8",
+              "on-surface-variant": "#acabaa",
+              "on-primary-container": "#b5d5e8",
+              "on-tertiary-fixed": "#000f4f",
+              "tertiary-fixed-dim": "#929fe6",
+              "surface-bright": "#2b2c2c",
+              "on-surface": "#e7e5e5",
+              "secondary-container": "#293e48",
+              "surface-container-high": "#1f2020",
+              "on-secondary": "#0d232b",
+              "on-secondary-fixed": "#2d424c",
+              "secondary-fixed-dim": "#c1d8e4",
+              "outline-variant": "#484848",
             },
-            "borderRadius": {
-                    "DEFAULT": "0.125rem",
-                    "lg": "0.25rem",
-                    "xl": "0.5rem",
-                    "full": "0.75rem"
+            borderRadius: {
+              DEFAULT: "0.125rem",
+              lg: "0.25rem",
+              xl: "0.5rem",
+              full: "0.75rem",
             },
-            "fontFamily": {
-                    "headline": ["Manrope"],
-                    "body": ["Inter"],
-                    "label": ["Inter"]
-            }
+            fontFamily: {
+              headline: ["Manrope"],
+              body: ["Inter"],
+              label: ["Inter"],
+            },
           },
         },
       }
     </script>
-<style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .ghost-overlay {
-            mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
-            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
-        }
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+      .ghost-overlay {
+        mask-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 1) 70%,
+          rgba(0, 0, 0, 0) 100%
+        );
+        -webkit-mask-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 1) 70%,
+          rgba(0, 0, 0, 0) 100%
+        );
+      }
     </style>
-<style>
-    body {
-      min-height: max(884px, 100dvh);
-    }
-  </style>
+    <style>
+      body {
+        min-height: max(884px, 100dvh);
+      }
+    </style>
   </head>
-<body class="bg-surface text-on-surface font-body selection:bg-primary/30 antialiased overflow-hidden h-screen flex flex-col">
-<!-- Top Navigation Anchor -->
-<header class="w-full sticky top-0 z-50 flex items-center justify-between px-10 py-6 w-full bg-[#0e0e0e] dark:bg-[#0e0e0e]">
-<div class="flex items-center gap-4">
-<button class="hover:opacity-80 transition-opacity duration-300 scale-95 active:duration-150 text-[#accbde]">
-<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
-</button>
-<h1 class="font-manrope font-black text-xl text-[#accbde] tracking-tighter">BodyTrace</h1>
-</div>
-<div class="flex items-center gap-6">
-<span class="font-inter text-[10px] uppercase tracking-[0.1em] font-bold text-primary px-3 py-1 bg-primary-container/30 rounded-full border border-outline-variant/10">Camera Active</span>
-<button class="hover:opacity-80 transition-opacity duration-300 scale-95 active:duration-150 text-[#accbde]">
-<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
-</button>
-</div>
-</header>
-<main class="flex-grow relative overflow-hidden bg-surface-container-lowest">
-<!-- Viewfinder Background -->
-<div class="absolute inset-0 z-0">
-<img class="w-full h-full object-cover brightness-[0.6]" data-alt="Modern minimalist home gym with soft natural light coming through a window, clean gray walls and a wooden floor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQd1_CJyKkw5qfWuawanrzuxTf2L55Td5S3xEFcT6pf2z-tePZ0twnQxiEzTSgwVwdna8BuxqFgfkLOZGdIpJdj_ttzr3ZHFpu79JDxOQkeUbw4XZFvnKSdLnq48Dm55BTDBze7oYrxtBoEx40mWjQbr8Uo1ThQY6bhmHmh3n5vPTjK-j0B-VH959ay07r_UlErCQHTKLSj38Wnzez0vNtRWKgmG-P5cryUN1d73TjNF_n7dV1Y0t6ixl1xri7kbWmZ0JgOhzdWwM"/>
-</div>
-<!-- Ghost Overlay (Reference Image) -->
-<div class="absolute inset-0 z-10 flex items-center justify-center pointer-events-none opacity-30 mix-blend-screen ghost-overlay">
-<img class="h-[80%] w-auto object-contain scale-95 border-2 border-primary/20 p-2" data-alt="faint semi-transparent silhouette of a muscular man standing in front pose for body tracking reference" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2XWT0H-R5pYrjdx_1WUg38nMXGPamrW-_IinmQUevshF-XxLypN7KGru5a_4mLzk3R_WNhEmd4cRA2w0PHZ8BT_unYmid57qQdciGPXl1GIB3bnMFQSwjYuq-dLn1lFiwwEzs_5QGvCX9ORrDzD8MGnXfk83WJFl_Lsm7v7ZHnUoEhGlSkAycVmz8CAPho-EnbXTDjvdQrRmzKxSRvznawXYFFRvYzmNL7Moi4mQUWcc3rWh4HyL_WXAIM8-7kyO1Km8z3HKAVqI"/>
-</div>
-<!-- Instructions Overlay -->
-<div class="absolute top-8 left-1/2 -translate-x-1/2 z-20 w-full max-w-md px-6">
-<div class="bg-surface-container-low/80 backdrop-blur-md px-6 py-4 rounded-xl text-center border-b border-outline-variant/10">
-<p class="font-headline font-bold text-primary tracking-tight text-lg mb-1">Align with previous pose</p>
-<p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Front Angle - July 12 Entry</p>
-</div>
-</div>
-<!-- Angle Toggle Switch -->
-<div class="absolute right-8 top-1/2 -translate-y-1/2 z-20 flex flex-col gap-4">
-<button class="w-14 h-14 rounded-xl bg-primary text-on-primary flex items-center justify-center shadow-lg transition-all duration-300">
-<span class="font-headline font-extrabold text-sm">FR</span>
-</button>
-<button class="w-14 h-14 rounded-xl bg-surface-container-high/60 backdrop-blur-sm text-on-surface-variant flex items-center justify-center hover:bg-surface-container-highest transition-all duration-300">
-<span class="font-headline font-extrabold text-sm">SI</span>
-</button>
-<button class="w-14 h-14 rounded-xl bg-surface-container-high/60 backdrop-blur-sm text-on-surface-variant flex items-center justify-center hover:bg-surface-container-highest transition-all duration-300">
-<span class="font-headline font-extrabold text-sm">BK</span>
-</button>
-</div>
-<!-- Camera Controls Bottom Bar -->
-<div class="absolute bottom-0 left-0 w-full z-30 bg-gradient-to-t from-surface to-transparent pb-12 pt-24 px-10">
-<div class="max-w-xl mx-auto flex items-center justify-between">
-<!-- Gallery Preview -->
-<div class="w-14 h-14 rounded-lg bg-surface-container-highest overflow-hidden border border-outline-variant/20 hover:scale-105 transition-transform">
-<img class="w-full h-full object-cover" data-alt="small thumbnail of a previous fitness progress photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGapkwp7iyrIj5PzOJxbq6rBrVv_kUycz7t6yjVvBmqol-eymx185q6Ak0WLtVIRLBWBrkkOjwIFiaJiyTIwf2f_3drOviKbYaqOwePS2t8B6N-dlH7WZm_SBWyJtzmotbFZmVs6SKW6O6MvUsz6i67hBNaHOfeqE0s6Pwa41v4cDI8jsyY2VSvDXKATbKsaWylrD___Fr3YizuefEmfwcBTqIuApJZIcrSRqFB0cZmS91Itoz4brIY-vt_PqC2W6oRhlVyxiY7Q8"/>
-</div>
-<!-- Shutter Mechanism -->
-<div class="relative group">
-<div class="absolute inset-0 bg-primary/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-<button class="relative w-20 h-20 rounded-full bg-surface-container-highest flex items-center justify-center border-4 border-outline-variant/30 group-active:scale-90 transition-transform duration-150">
-<div class="w-14 h-14 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center">
-<span class="material-symbols-outlined text-on-primary text-3xl" style="font-variation-settings: 'FILL' 1;">photo_camera</span>
-</div>
-</button>
-</div>
-<!-- Camera Swap -->
-<button class="w-14 h-14 rounded-full bg-surface-container-high/60 backdrop-blur-sm text-on-surface flex items-center justify-center hover:bg-surface-container-highest transition-all">
-<span class="material-symbols-outlined" data-icon="flip_camera_ios">flip_camera_ios</span>
-</button>
-</div>
-</div>
-<!-- Grids & Guides Overlay (Subtle) -->
-<div class="absolute inset-0 z-10 pointer-events-none grid grid-cols-3 grid-rows-3 opacity-10">
-<div class="border-r border-b border-on-surface"></div>
-<div class="border-r border-b border-on-surface"></div>
-<div class="border-b border-on-surface"></div>
-<div class="border-r border-b border-on-surface"></div>
-<div class="border-r border-b border-on-surface"></div>
-<div class="border-b border-on-surface"></div>
-<div class="border-r border-on-surface"></div>
-<div class="border-r border-on-surface"></div>
-<div></div>
-</div>
-</main>
-<!-- Suppressed Shell: BottomNavBar is not rendered as this is a focused task-flow -->
-<!-- Status Icons Floating -->
-<div class="fixed top-24 left-8 z-40 flex flex-col gap-4">
-<div class="flex items-center gap-2 bg-surface-container-low/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-outline-variant/10">
-<span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
-<span class="font-label text-[10px] uppercase font-bold tracking-widest text-on-surface-variant">REC</span>
-</div>
-<div class="flex items-center gap-2 bg-tertiary-container/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-tertiary/20">
-<span class="material-symbols-outlined text-[14px] text-tertiary" data-icon="lock" style="font-variation-settings: 'FILL' 1;">lock</span>
-<span class="font-label text-[10px] uppercase font-bold tracking-widest text-tertiary">Local Storage</span>
-</div>
-</div>
-</body></html>
+  <body
+    class="text-on-surface font-body selection:bg-primary/30 flex h-screen flex-col overflow-hidden bg-surface antialiased"
+  >
+    <!-- Top Navigation Anchor -->
+    <header
+      class="sticky top-0 z-50 flex w-full items-center justify-between bg-[#0e0e0e] px-10 py-6 dark:bg-[#0e0e0e]"
+    >
+      <div class="flex items-center gap-4">
+        <button
+          class="scale-95 text-[#accbde] transition-opacity duration-300 hover:opacity-80 active:duration-150"
+        >
+          <span class="material-symbols-outlined" data-icon="arrow_back"
+            >arrow_back</span
+          >
+        </button>
+        <h1
+          class="font-manrope text-xl font-black tracking-tighter text-[#accbde]"
+        >
+          BodyTrace
+        </h1>
+      </div>
+      <div class="flex items-center gap-6">
+        <span
+          class="font-inter text-primary bg-primary-container/30 border-outline-variant/10 rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.1em]"
+          >Camera Active</span
+        >
+        <button
+          class="scale-95 text-[#accbde] transition-opacity duration-300 hover:opacity-80 active:duration-150"
+        >
+          <span class="material-symbols-outlined" data-icon="more_vert"
+            >more_vert</span
+          >
+        </button>
+      </div>
+    </header>
+    <main
+      class="bg-surface-container-lowest relative flex-grow overflow-hidden"
+    >
+      <!-- Viewfinder Background -->
+      <div class="absolute inset-0 z-0">
+        <img
+          class="h-full w-full object-cover brightness-[0.6]"
+          data-alt="Modern minimalist home gym with soft natural light coming through a window, clean gray walls and a wooden floor"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQd1_CJyKkw5qfWuawanrzuxTf2L55Td5S3xEFcT6pf2z-tePZ0twnQxiEzTSgwVwdna8BuxqFgfkLOZGdIpJdj_ttzr3ZHFpu79JDxOQkeUbw4XZFvnKSdLnq48Dm55BTDBze7oYrxtBoEx40mWjQbr8Uo1ThQY6bhmHmh3n5vPTjK-j0B-VH959ay07r_UlErCQHTKLSj38Wnzez0vNtRWKgmG-P5cryUN1d73TjNF_n7dV1Y0t6ixl1xri7kbWmZ0JgOhzdWwM"
+        />
+      </div>
+      <!-- Ghost Overlay (Reference Image) -->
+      <div
+        class="ghost-overlay pointer-events-none absolute inset-0 z-10 flex items-center justify-center opacity-30 mix-blend-screen"
+      >
+        <img
+          class="border-primary/20 h-[80%] w-auto scale-95 border-2 object-contain p-2"
+          data-alt="faint semi-transparent silhouette of a muscular man standing in front pose for body tracking reference"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2XWT0H-R5pYrjdx_1WUg38nMXGPamrW-_IinmQUevshF-XxLypN7KGru5a_4mLzk3R_WNhEmd4cRA2w0PHZ8BT_unYmid57qQdciGPXl1GIB3bnMFQSwjYuq-dLn1lFiwwEzs_5QGvCX9ORrDzD8MGnXfk83WJFl_Lsm7v7ZHnUoEhGlSkAycVmz8CAPho-EnbXTDjvdQrRmzKxSRvznawXYFFRvYzmNL7Moi4mQUWcc3rWh4HyL_WXAIM8-7kyO1Km8z3HKAVqI"
+        />
+      </div>
+      <!-- Instructions Overlay -->
+      <div
+        class="absolute left-1/2 top-8 z-20 w-full max-w-md -translate-x-1/2 px-6"
+      >
+        <div
+          class="bg-surface-container-low/80 border-outline-variant/10 rounded-xl border-b px-6 py-4 text-center backdrop-blur-md"
+        >
+          <p
+            class="font-headline text-primary mb-1 text-lg font-bold tracking-tight"
+          >
+            Align with previous pose
+          </p>
+          <p
+            class="font-label text-on-surface-variant text-xs uppercase tracking-widest"
+          >
+            Front Angle - July 12 Entry
+          </p>
+        </div>
+      </div>
+      <!-- Angle Toggle Switch -->
+      <div
+        class="absolute right-8 top-1/2 z-20 flex -translate-y-1/2 flex-col gap-4"
+      >
+        <button
+          class="bg-primary text-on-primary flex h-14 w-14 items-center justify-center rounded-xl shadow-lg transition-all duration-300"
+        >
+          <span class="font-headline text-sm font-extrabold">FR</span>
+        </button>
+        <button
+          class="bg-surface-container-high/60 text-on-surface-variant hover:bg-surface-container-highest flex h-14 w-14 items-center justify-center rounded-xl backdrop-blur-sm transition-all duration-300"
+        >
+          <span class="font-headline text-sm font-extrabold">SI</span>
+        </button>
+        <button
+          class="bg-surface-container-high/60 text-on-surface-variant hover:bg-surface-container-highest flex h-14 w-14 items-center justify-center rounded-xl backdrop-blur-sm transition-all duration-300"
+        >
+          <span class="font-headline text-sm font-extrabold">BK</span>
+        </button>
+      </div>
+      <!-- Camera Controls Bottom Bar -->
+      <div
+        class="absolute bottom-0 left-0 z-30 w-full bg-gradient-to-t from-surface to-transparent px-10 pb-12 pt-24"
+      >
+        <div class="mx-auto flex max-w-xl items-center justify-between">
+          <!-- Gallery Preview -->
+          <div
+            class="bg-surface-container-highest border-outline-variant/20 h-14 w-14 overflow-hidden rounded-lg border transition-transform hover:scale-105"
+          >
+            <img
+              class="h-full w-full object-cover"
+              data-alt="small thumbnail of a previous fitness progress photo"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGapkwp7iyrIj5PzOJxbq6rBrVv_kUycz7t6yjVvBmqol-eymx185q6Ak0WLtVIRLBWBrkkOjwIFiaJiyTIwf2f_3drOviKbYaqOwePS2t8B6N-dlH7WZm_SBWyJtzmotbFZmVs6SKW6O6MvUsz6i67hBNaHOfeqE0s6Pwa41v4cDI8jsyY2VSvDXKATbKsaWylrD___Fr3YizuefEmfwcBTqIuApJZIcrSRqFB0cZmS91Itoz4brIY-vt_PqC2W6oRhlVyxiY7Q8"
+            />
+          </div>
+          <!-- Shutter Mechanism -->
+          <div class="group relative">
+            <div
+              class="bg-primary/20 absolute inset-0 rounded-full opacity-0 blur-xl transition-opacity group-hover:opacity-100"
+            ></div>
+            <button
+              class="bg-surface-container-highest border-outline-variant/30 relative flex h-20 w-20 items-center justify-center rounded-full border-4 transition-transform duration-150 group-active:scale-90"
+            >
+              <div
+                class="from-primary to-primary-container flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br"
+              >
+                <span
+                  class="material-symbols-outlined text-on-primary text-3xl"
+                  style="font-variation-settings: &quot;FILL&quot; 1"
+                  >photo_camera</span
+                >
+              </div>
+            </button>
+          </div>
+          <!-- Camera Swap -->
+          <button
+            class="bg-surface-container-high/60 text-on-surface hover:bg-surface-container-highest flex h-14 w-14 items-center justify-center rounded-full backdrop-blur-sm transition-all"
+          >
+            <span class="material-symbols-outlined" data-icon="flip_camera_ios"
+              >flip_camera_ios</span
+            >
+          </button>
+        </div>
+      </div>
+      <!-- Grids & Guides Overlay (Subtle) -->
+      <div
+        class="pointer-events-none absolute inset-0 z-10 grid grid-cols-3 grid-rows-3 opacity-10"
+      >
+        <div class="border-on-surface border-b border-r"></div>
+        <div class="border-on-surface border-b border-r"></div>
+        <div class="border-on-surface border-b"></div>
+        <div class="border-on-surface border-b border-r"></div>
+        <div class="border-on-surface border-b border-r"></div>
+        <div class="border-on-surface border-b"></div>
+        <div class="border-on-surface border-r"></div>
+        <div class="border-on-surface border-r"></div>
+        <div></div>
+      </div>
+    </main>
+    <!-- Suppressed Shell: BottomNavBar is not rendered as this is a focused task-flow -->
+    <!-- Status Icons Floating -->
+    <div class="fixed left-8 top-24 z-40 flex flex-col gap-4">
+      <div
+        class="bg-surface-container-low/60 border-outline-variant/10 flex items-center gap-2 rounded-full border px-3 py-1.5 backdrop-blur-md"
+      >
+        <span class="bg-error h-2 w-2 animate-pulse rounded-full"></span>
+        <span
+          class="font-label text-on-surface-variant text-[10px] font-bold uppercase tracking-widest"
+          >REC</span
+        >
+      </div>
+      <div
+        class="bg-tertiary-container/20 border-tertiary/20 flex items-center gap-2 rounded-full border px-3 py-1.5 backdrop-blur-md"
+      >
+        <span
+          class="material-symbols-outlined text-tertiary text-[14px]"
+          data-icon="lock"
+          style="font-variation-settings: &quot;FILL&quot; 1"
+          >lock</span
+        >
+        <span
+          class="font-label text-tertiary text-[10px] font-bold uppercase tracking-widest"
+          >Local Storage</span
+        >
+      </div>
+    </div>
+  </body>
+</html>

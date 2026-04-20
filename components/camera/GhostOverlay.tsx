@@ -1,13 +1,13 @@
-import React from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import React from "react"
+import { Image, StyleSheet, View } from "react-native"
 
-import { useResolvedPhotoUri } from '@/hooks/useResolvedPhotoUri';
+import { useResolvedPhotoUri } from "@/hooks/useResolvedPhotoUri"
 
 export interface GhostOverlayProps {
   /** Local file URI or remote URL of the reference photo */
-  imageUri: string | null;
+  imageUri: string | null
   /** 0–1 opacity of the ghost layer */
-  opacity: number;
+  opacity: number
 }
 
 /**
@@ -15,12 +15,12 @@ export interface GhostOverlayProps {
  * Uses `cover` to match typical full-bleed camera framing.
  */
 export function GhostOverlay({ imageUri, opacity }: GhostOverlayProps) {
-  const resolved = useResolvedPhotoUri(imageUri);
+  const resolved = useResolvedPhotoUri(imageUri)
   if (!imageUri || opacity <= 0) {
-    return null;
+    return null
   }
   if (!resolved) {
-    return null;
+    return null
   }
 
   return (
@@ -31,5 +31,5 @@ export function GhostOverlay({ imageUri, opacity }: GhostOverlayProps) {
         resizeMode="cover"
       />
     </View>
-  );
+  )
 }

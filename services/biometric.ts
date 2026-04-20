@@ -1,16 +1,18 @@
-import * as LocalAuthentication from 'expo-local-authentication';
+import * as LocalAuthentication from "expo-local-authentication"
 
 export async function canUseBiometric(): Promise<boolean> {
-  const has = await LocalAuthentication.hasHardwareAsync();
-  if (!has) return false;
-  return LocalAuthentication.isEnrolledAsync();
+  const has = await LocalAuthentication.hasHardwareAsync()
+  if (!has) return false
+  return LocalAuthentication.isEnrolledAsync()
 }
 
-export async function authenticateWithBiometrics(promptMessage: string): Promise<boolean> {
+export async function authenticateWithBiometrics(
+  promptMessage: string,
+): Promise<boolean> {
   const r = await LocalAuthentication.authenticateAsync({
     promptMessage,
-    cancelLabel: 'Cancel',
+    cancelLabel: "Cancel",
     disableDeviceFallback: false,
-  });
-  return r.success === true;
+  })
+  return r.success === true
 }

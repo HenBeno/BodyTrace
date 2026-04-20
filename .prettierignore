@@ -1,0 +1,9 @@
+node_modules
+.cursor/skills
+.expo
+dist
+dist-web
+coverage
+ios
+android
+package-lock.json

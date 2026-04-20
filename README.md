@@ -35,19 +35,19 @@
 
 ## Tech stack
 
-| Area | Technology |
-|------|------------|
-| Framework | [Expo](https://expo.dev/) ~54, [React Native](https://reactnative.dev/) 0.81 |
-| Language | TypeScript |
-| Navigation | [Expo Router](https://docs.expo.dev/router/introduction/) (file-based, typed routes) |
-| Styling | [NativeWind](https://www.nativewind.dev/) v4 (Tailwind CSS) |
-| Icons | [Lucide React Native](https://lucide.dev/) |
-| State | React Context (`EntriesContext`, `SettingsContext`) |
-| Database | [expo-sqlite](https://docs.expo.dev/versions/latest/sdk/sqlite/) |
-| Camera | [expo-camera](https://docs.expo.dev/versions/latest/sdk/camera/) |
+| Area             | Technology                                                                                                                                                                            |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Framework        | [Expo](https://expo.dev/) ~54, [React Native](https://reactnative.dev/) 0.81                                                                                                          |
+| Language         | TypeScript                                                                                                                                                                            |
+| Navigation       | [Expo Router](https://docs.expo.dev/router/introduction/) (file-based, typed routes)                                                                                                  |
+| Styling          | [NativeWind](https://www.nativewind.dev/) v4 (Tailwind CSS)                                                                                                                           |
+| Icons            | [Lucide React Native](https://lucide.dev/)                                                                                                                                            |
+| State            | React Context (`EntriesContext`, `SettingsContext`)                                                                                                                                   |
+| Database         | [expo-sqlite](https://docs.expo.dev/versions/latest/sdk/sqlite/)                                                                                                                      |
+| Camera           | [expo-camera](https://docs.expo.dev/versions/latest/sdk/camera/)                                                                                                                      |
 | Crypto / secrets | [expo-crypto](https://docs.expo.dev/versions/latest/sdk/crypto/), [expo-secure-store](https://docs.expo.dev/versions/latest/sdk/securestore/), [TweetNaCl](https://tweetnacl.js.org/) |
-| Biometrics | [expo-local-authentication](https://docs.expo.dev/versions/latest/sdk/local-authentication/) |
-| Notifications | [expo-notifications](https://docs.expo.dev/versions/latest/sdk/notifications/) |
+| Biometrics       | [expo-local-authentication](https://docs.expo.dev/versions/latest/sdk/local-authentication/)                                                                                          |
+| Notifications    | [expo-notifications](https://docs.expo.dev/versions/latest/sdk/notifications/)                                                                                                        |
 
 The app targets the **New Architecture** (`newArchEnabled` in `app.json`).
 
@@ -134,10 +134,10 @@ For reliable camera access during development, use a **physical device** with Ex
 
 ## Platform notes
 
-| Platform | Notes |
-|----------|--------|
-| **iOS / Android** | Full camera, SQLite, SecureStore, biometrics, sharing, and encrypted photo paths as implemented. |
-| **Web** | Useful for UI development; `EntriesContext` may keep entries in memory only for add flows; camera and some native features are limited or stubbed. |
+| Platform          | Notes                                                                                                                                              |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **iOS / Android** | Full camera, SQLite, SecureStore, biometrics, sharing, and encrypted photo paths as implemented.                                                   |
+| **Web**           | Useful for UI development; `EntriesContext` may keep entries in memory only for add flows; camera and some native features are limited or stubbed. |
 
 Always verify permission strings in `app.json` before shipping to stores.
 
@@ -155,12 +155,12 @@ This is **not** a HIPAA or medical-device certification statement—treat the ap
 
 ## Scripts reference
 
-| Command | Description |
-|---------|-------------|
-| `npm start` | Start Expo Metro / dev tools |
-| `npm run ios` | Start dev server and open iOS |
+| Command           | Description                       |
+| ----------------- | --------------------------------- |
+| `npm start`       | Start Expo Metro / dev tools      |
+| `npm run ios`     | Start dev server and open iOS     |
 | `npm run android` | Start dev server and open Android |
-| `npm run web` | Start dev server for web |
+| `npm run web`     | Start dev server for web          |
 
 ---
 
