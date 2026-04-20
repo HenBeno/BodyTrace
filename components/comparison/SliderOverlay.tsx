@@ -1,18 +1,18 @@
 import * as Haptics from "expo-haptics"
 import React, { useCallback, useState } from "react"
 import {
-    LayoutChangeEvent,
-    Platform,
-    StyleSheet,
-    Text,
-    View,
+  LayoutChangeEvent,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import Animated, {
-    runOnJS,
-    useAnimatedStyle,
-    useSharedValue,
-    withSpring,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
 } from "react-native-reanimated"
 
 import { ResolvedExpoImage } from "@/components/media/ResolvedExpoImage"

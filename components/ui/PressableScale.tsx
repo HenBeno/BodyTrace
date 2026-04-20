@@ -1,9 +1,9 @@
 import React, { forwardRef, type ReactNode } from "react"
 import { Pressable, type PressableProps, type View } from "react-native"
 import Animated, {
-    useAnimatedStyle,
-    useSharedValue,
-    withSpring,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
 } from "react-native-reanimated"
 
 import { lightImpact } from "@/services/haptics"

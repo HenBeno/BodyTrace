@@ -1,14 +1,14 @@
 import {
-    Inter_400Regular,
-    Inter_500Medium,
-    Inter_600SemiBold,
-    Inter_700Bold,
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_600SemiBold,
+  Inter_700Bold,
 } from "@expo-google-fonts/inter"
 import FontAwesome from "@expo/vector-icons/FontAwesome"
 import {
-    DarkTheme,
-    DefaultTheme,
-    ThemeProvider,
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
 } from "@react-navigation/native"
 import { useFonts } from "expo-font"
 import { Stack } from "expo-router"

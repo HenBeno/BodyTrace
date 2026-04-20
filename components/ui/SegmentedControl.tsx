@@ -1,15 +1,15 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 import {
-    LayoutChangeEvent,
-    Pressable,
-    Text,
-    View,
-    type LayoutRectangle,
+  LayoutChangeEvent,
+  Pressable,
+  Text,
+  View,
+  type LayoutRectangle,
 } from "react-native"
 import Animated, {
-    useAnimatedStyle,
-    useSharedValue,
-    withTiming,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
 } from "react-native-reanimated"
 
 import { selection } from "@/services/haptics"

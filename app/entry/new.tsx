@@ -3,17 +3,17 @@ import { Stack, router } from "expo-router"
 import { ChevronLeft, Sparkles } from "lucide-react-native"
 import React, { useCallback, useMemo, useRef, useState } from "react"
 import {
-    ActivityIndicator,
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
-    useColorScheme,
+  ActivityIndicator,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  useColorScheme,
 } from "react-native"
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 
@@ -21,8 +21,8 @@ import { AlignmentGuide } from "@/components/camera/AlignmentGuide"
 import { CameraControlSheet } from "@/components/camera/CameraControlSheet"
 import { GhostOverlay } from "@/components/camera/GhostOverlay"
 import {
-    BodyMeasurementZoneIcon,
-    NotesGlyphIcon,
+  BodyMeasurementZoneIcon,
+  NotesGlyphIcon,
 } from "@/components/measurements/BodyMeasurementIcons"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
@@ -32,10 +32,10 @@ import { success } from "@/services/haptics"
 import type { CircumferenceUnit, Entry, PhotoAngle, WeightUnit } from "@/types"
 import { MEASUREMENT_GROUPS, MEASUREMENT_LABELS } from "@/utils/constants"
 import {
-    CIRCUMFERENCE_UNIT_OPTIONS,
-    WEIGHT_UNIT_OPTIONS,
-    defaultUnitForKey,
-    isWeightMeasurementKey,
+  CIRCUMFERENCE_UNIT_OPTIONS,
+  WEIGHT_UNIT_OPTIONS,
+  defaultUnitForKey,
+  isWeightMeasurementKey,
 } from "@/utils/measurements"
 import { safeGoBack } from "@/utils/navigation"
 import { theme } from "@/utils/theme"

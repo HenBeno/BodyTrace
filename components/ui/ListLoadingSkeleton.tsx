@@ -1,11 +1,11 @@
 import React, { useEffect } from "react"
 import { useColorScheme, View } from "react-native"
 import Animated, {
-    useAnimatedStyle,
-    useSharedValue,
-    withRepeat,
-    withSequence,
-    withTiming,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSequence,
+  withTiming,
 } from "react-native-reanimated"
 
 export interface ListLoadingSkeletonProps {

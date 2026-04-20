@@ -2,12 +2,12 @@ import { Link } from "expo-router"
 import { Camera } from "lucide-react-native"
 import React, { useCallback } from "react"
 import {
-    FlatList,
-    ListRenderItem,
-    RefreshControl,
-    Text,
-    useColorScheme,
-    View,
+  FlatList,
+  ListRenderItem,
+  RefreshControl,
+  Text,
+  useColorScheme,
+  View,
 } from "react-native"
 import Animated, { FadeInDown } from "react-native-reanimated"
 

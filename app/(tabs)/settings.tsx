@@ -1,14 +1,14 @@
 import { Database, Fingerprint, Shield } from "lucide-react-native"
 import React, { useCallback, useState } from "react"
 import {
-    ActivityIndicator,
-    Alert,
-    Pressable,
-    ScrollView,
-    Switch,
-    Text,
-    useColorScheme,
-    View,
+  ActivityIndicator,
+  Alert,
+  Pressable,
+  ScrollView,
+  Switch,
+  Text,
+  useColorScheme,
+  View,
 } from "react-native"
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 
@@ -17,8 +17,8 @@ import { ScreenHeader } from "@/components/ui/ScreenHeader"
 import { TrustBadge } from "@/components/ui/TrustBadge"
 import { useSettings } from "@/contexts/SettingsContext"
 import {
-    authenticateWithBiometrics,
-    canUseBiometric,
+  authenticateWithBiometrics,
+  canUseBiometric,
 } from "@/services/biometric"
 import type { AppSettings, ReminderMode } from "@/types"
 import { theme } from "@/utils/theme"

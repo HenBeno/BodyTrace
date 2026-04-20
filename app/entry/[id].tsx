@@ -2,12 +2,12 @@ import { Stack, router, useLocalSearchParams } from "expo-router"
 import { Trash2 } from "lucide-react-native"
 import React, { useCallback, useMemo } from "react"
 import {
-    ActivityIndicator,
-    Alert,
-    Pressable,
-    ScrollView,
-    Text,
-    View,
+  ActivityIndicator,
+  Alert,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
 } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 

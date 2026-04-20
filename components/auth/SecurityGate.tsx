@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react"
 import {
-    ActivityIndicator,
-    AppState,
-    StyleSheet,
-    Text,
-    View,
+  ActivityIndicator,
+  AppState,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native"
 
 import { Button } from "@/components/ui/Button"
