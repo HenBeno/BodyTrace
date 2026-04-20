@@ -8,6 +8,12 @@
     "scheme": "bodytrace",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "runtimeVersion": {
+      "policy": "fingerprint"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/a4bec32d-da2e-4adf-b9b1-2acd1ff20c3f"
+    },
     "splash": {
       "image": "./assets/images/splash-icon.png",
       "resizeMode": "contain",
@@ -63,7 +69,8 @@
           "color": "#0d9488",
           "sounds": []
         }
-      ]
+      ],
+      "expo-updates"
     ],
     "experiments": {
       "typedRoutes": true
