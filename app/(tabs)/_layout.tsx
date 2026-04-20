@@ -1,20 +1,20 @@
-import { Tabs } from "expo-router";
-import { Columns2, Home, Settings } from "lucide-react-native";
-import React from "react";
-import { useColorScheme } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Tabs } from "expo-router"
+import { Columns2, Home, Settings } from "lucide-react-native"
+import React from "react"
+import { useColorScheme } from "react-native"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
-import { useClientOnlyValue } from "@/components/useClientOnlyValue";
-import { theme } from "@/utils/theme";
+import { useClientOnlyValue } from "@/components/useClientOnlyValue"
+import { theme } from "@/utils/theme"
 
 export default function TabLayout() {
-  const insets = useSafeAreaInsets();
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === "dark";
-  const inactive = isDark ? theme.mutedText : "#64748b";
-  const active = theme.accent;
-  const barBg = isDark ? theme.canvas : "#ffffff";
-  const border = isDark ? "rgba(255,255,255,0.1)" : "rgba(15,23,42,0.08)";
+  const insets = useSafeAreaInsets()
+  const colorScheme = useColorScheme()
+  const isDark = colorScheme === "dark"
+  const inactive = isDark ? theme.mutedText : "#64748b"
+  const active = theme.accent
+  const barBg = isDark ? theme.canvas : "#ffffff"
+  const border = isDark ? "rgba(255,255,255,0.1)" : "rgba(15,23,42,0.08)"
 
   return (
     <Tabs
@@ -71,5 +71,5 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
-  );
+  )
 }

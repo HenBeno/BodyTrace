@@ -1,31 +1,31 @@
-import { Stack, router, useLocalSearchParams } from "expo-router";
-import { Trash2 } from "lucide-react-native";
-import React, { useCallback, useMemo } from "react";
+import { Stack, router, useLocalSearchParams } from "expo-router"
+import { Trash2 } from "lucide-react-native"
+import React, { useCallback, useMemo } from "react"
 import {
-  ActivityIndicator,
-  Alert,
-  Pressable,
-  ScrollView,
-  Text,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+    ActivityIndicator,
+    Alert,
+    Pressable,
+    ScrollView,
+    Text,
+    View,
+} from "react-native"
+import { SafeAreaView } from "react-native-safe-area-context"
 
-import { ResolvedExpoImage } from "@/components/media/ResolvedExpoImage";
-import { Card } from "@/components/ui/Card";
-import { useEntries } from "@/contexts/EntriesContext";
-import { MEASUREMENT_LABELS } from "@/utils/constants";
-import { formatMeasurementDisplay } from "@/utils/measurements";
-import { theme } from "@/utils/theme";
+import { ResolvedExpoImage } from "@/components/media/ResolvedExpoImage"
+import { Card } from "@/components/ui/Card"
+import { useEntries } from "@/contexts/EntriesContext"
+import { MEASUREMENT_LABELS } from "@/utils/constants"
+import { formatMeasurementDisplay } from "@/utils/measurements"
+import { theme } from "@/utils/theme"
 
 export default function EntryDetailScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const { entries, ready, removeEntry } = useEntries();
+  const { id } = useLocalSearchParams<{ id: string }>()
+  const { entries, ready, removeEntry } = useEntries()
 
-  const entry = useMemo(() => entries.find((e) => e.id === id), [entries, id]);
+  const entry = useMemo(() => entries.find((e) => e.id === id), [entries, id])
 
   const onDelete = useCallback(() => {
-    if (!entry) return;
+    if (!entry) return
     Alert.alert(
       "Delete this entry?",
       "Photos and measurements will be removed from this device.",
@@ -36,35 +36,35 @@ export default function EntryDetailScreen() {
           style: "destructive",
           onPress: async () => {
             try {
-              await removeEntry(entry.id);
-              router.back();
+              await removeEntry(entry.id)
+              router.back()
             } catch (e) {
               Alert.alert(
                 "Delete failed",
                 e instanceof Error ? e.message : "Unknown error",
-              );
+              )
             }
           },
         },
       ],
-    );
-  }, [entry, removeEntry]);
+    )
+  }, [entry, removeEntry])
 
   const statItems = useMemo(() => {
-    if (!entry) return [];
+    if (!entry) return []
     return MEASUREMENT_LABELS.map(({ key, label }) => {
-      const m = entry.measurements[key];
-      if (!m) return null;
-      return { key, label, display: formatMeasurementDisplay(m) };
-    }).filter(Boolean) as { key: string; label: string; display: string }[];
-  }, [entry]);
+      const m = entry.measurements[key]
+      if (!m) return null
+      return { key, label, display: formatMeasurementDisplay(m) }
+    }).filter(Boolean) as { key: string; label: string; display: string }[]
+  }, [entry])
 
   if (!ready) {
     return (
       <SafeAreaView className="flex-1 items-center justify-center bg-slate-50 dark:bg-canvas">
         <ActivityIndicator color={theme.accent} />
       </SafeAreaView>
-    );
+    )
   }
 
   if (!entry) {
@@ -74,7 +74,7 @@ export default function EntryDetailScreen() {
           Entry not found.
         </Text>
       </SafeAreaView>
-    );
+    )
   }
 
   return (
@@ -107,7 +107,7 @@ export default function EntryDetailScreen() {
         >
           <View className="mb-5 flex-row gap-2">
             {(["front", "side", "back"] as const).map((angle) => {
-              const uri = entry.photos[angle];
+              const uri = entry.photos[angle]
               return (
                 <View
                   key={angle}
@@ -133,7 +133,7 @@ export default function EntryDetailScreen() {
                     {angle}
                   </Text>
                 </View>
-              );
+              )
             })}
           </View>
 
@@ -180,5 +180,5 @@ export default function EntryDetailScreen() {
         </ScrollView>
       </SafeAreaView>
     </>
-  );
+  )
 }

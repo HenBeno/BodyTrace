@@ -1,52 +1,51 @@
-import { Columns2, MoreHorizontal, Share2 } from "lucide-react-native";
-import React, { useCallback, useMemo, useState } from "react";
-import {
-  ActivityIndicator,
-  Alert,
-  Pressable,
-  ScrollView,
-  Text,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Columns2, MoreHorizontal, Share2 } from "lucide-react-native"
+import React, { useCallback, useMemo, useState } from "react"
+import { Alert, ScrollView, Text, View } from "react-native"
+import Animated, { FadeInDown } from "react-native-reanimated"
+import { SafeAreaView } from "react-native-safe-area-context"
 
-import { SideBySide } from "@/components/comparison/SideBySide";
-import { SliderOverlay } from "@/components/comparison/SliderOverlay";
-import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
-import { ScreenHeader } from "@/components/ui/ScreenHeader";
-import { SegmentedControl } from "@/components/ui/SegmentedControl";
-import { useEntries } from "@/contexts/EntriesContext";
-import { shareImageUri } from "@/services/export";
-import type { PhotoAngle } from "@/types";
-import { theme } from "@/utils/theme";
+import { SideBySide } from "@/components/comparison/SideBySide"
+import { SliderOverlay } from "@/components/comparison/SliderOverlay"
+import { Button } from "@/components/ui/Button"
+import { Card } from "@/components/ui/Card"
+import { ListLoadingSkeleton } from "@/components/ui/ListLoadingSkeleton"
+import { PressableScale } from "@/components/ui/PressableScale"
+import { ScreenHeader } from "@/components/ui/ScreenHeader"
+import { SegmentedControl } from "@/components/ui/SegmentedControl"
+import { useEntries } from "@/contexts/EntriesContext"
+import { shareImageUri } from "@/services/export"
+import { lightImpact, selection } from "@/services/haptics"
+import type { PhotoAngle } from "@/types"
+import { space, theme } from "@/utils/theme"
 
 const ANGLES: { id: PhotoAngle; label: string }[] = [
   { id: "front", label: "Front" },
   { id: "side", label: "Side" },
   { id: "back", label: "Back" },
-];
+]
 
 const MODES: { id: "side" | "slider"; label: string }[] = [
   { id: "slider", label: "Slider" },
   { id: "side", label: "Side by side" },
-];
+]
+
+const CHIP_SNAP = 96
 
 function formatShort(d: Date) {
   return d.toLocaleDateString(undefined, {
     month: "short",
     day: "numeric",
     year: "numeric",
-  });
+  })
 }
 
 export default function CompareScreen() {
-  const { entries, ready } = useEntries();
-  const [angle, setAngle] = useState<PhotoAngle>("front");
-  const [mode, setMode] = useState<"side" | "slider">("slider");
-  const [olderId, setOlderId] = useState<string | null>(null);
-  const [newerId, setNewerId] = useState<string | null>(null);
-  const [showShareRow, setShowShareRow] = useState(false);
+  const { entries, ready } = useEntries()
+  const [angle, setAngle] = useState<PhotoAngle>("front")
+  const [mode, setMode] = useState<"side" | "slider">("slider")
+  const [olderId, setOlderId] = useState<string | null>(null)
+  const [newerId, setNewerId] = useState<string | null>(null)
+  const [showShareRow, setShowShareRow] = useState(false)
 
   const sortedAsc = useMemo(
     () =>
@@ -54,63 +53,82 @@ export default function CompareScreen() {
         (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
       ),
     [entries],
-  );
+  )
   const sortedDesc = useMemo(
     () =>
       [...entries].sort(
         (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
       ),
     [entries],
-  );
+  )
 
-  const defaultOlder = sortedAsc[0];
-  const defaultNewer = sortedDesc[0];
+  const defaultOlder = sortedAsc[0]
+  const defaultNewer = sortedDesc[0]
 
   const older = useMemo(
     () => entries.find((e) => e.id === (olderId ?? defaultOlder?.id)),
     [defaultOlder?.id, entries, olderId],
-  );
+  )
   const newer = useMemo(
     () => entries.find((e) => e.id === (newerId ?? defaultNewer?.id)),
     [defaultNewer?.id, entries, newerId],
-  );
+  )
 
-  const beforeUri = older?.photos[angle];
-  const afterUri = newer?.photos[angle];
+  const beforeUri = older?.photos[angle]
+  const afterUri = newer?.photos[angle]
+
+  const effectiveOlderId = olderId ?? defaultOlder?.id ?? null
+  const effectiveNewerId = newerId ?? defaultNewer?.id ?? null
+
+  const onPickOlder = useCallback(
+    (id: string) => {
+      if (id !== effectiveOlderId) selection()
+      setOlderId(id)
+    },
+    [effectiveOlderId],
+  )
+
+  const onPickNewer = useCallback(
+    (id: string) => {
+      if (id !== effectiveNewerId) selection()
+      setNewerId(id)
+    },
+    [effectiveNewerId],
+  )
 
   const onShareBefore = useCallback(async () => {
-    if (!beforeUri) return;
+    if (!beforeUri) return
     try {
-      await shareImageUri(beforeUri);
+      await shareImageUri(beforeUri)
     } catch (e) {
       Alert.alert(
         "Share failed",
         e instanceof Error ? e.message : "Unknown error",
-      );
+      )
     }
-  }, [beforeUri]);
+  }, [beforeUri])
 
   const onShareAfter = useCallback(async () => {
-    if (!afterUri) return;
+    if (!afterUri) return
     try {
-      await shareImageUri(afterUri);
+      await shareImageUri(afterUri)
     } catch (e) {
       Alert.alert(
         "Share failed",
         e instanceof Error ? e.message : "Unknown error",
-      );
+      )
     }
-  }, [afterUri]);
+  }, [afterUri])
 
   if (!ready) {
     return (
       <SafeAreaView
-        className="flex-1 items-center justify-center bg-slate-50 dark:bg-canvas"
+        className="flex-1 bg-slate-50 dark:bg-canvas"
         edges={["top"]}
       >
-        <ActivityIndicator color={theme.accent} />
+        <ListLoadingSkeleton rows={2} />
       </SafeAreaView>
-    );
+    )
   }
 
   if (entries.length < 2) {
@@ -121,41 +139,52 @@ export default function CompareScreen() {
       >
         <ScreenHeader
           title="Compare"
-          subtitle="See change between two checkpoints — same angle, same framing."
+          subtitle="Same angle, same framing — two checkpoints side by side."
           leftAccessory={<Columns2 size={28} color={theme.accent} />}
         />
-        <Card>
-          <Text className="leading-6 text-slate-700 dark:text-vault-muted">
-            Add at least two entries to your timeline to compare before and
-            after.
-          </Text>
-        </Card>
+        <Animated.View entering={FadeInDown.duration(280)}>
+          <Card className="mt-1">
+            <Text className="text-center font-inter-semibold text-base text-slate-900 dark:text-vault-fg">
+              Add two checkpoints
+            </Text>
+            <Text className="mt-2 text-center leading-6 text-slate-600 dark:text-vault-muted">
+              Capture one more entry on your timeline, then come back here to
+              compare before and after.
+            </Text>
+          </Card>
+        </Animated.View>
       </SafeAreaView>
-    );
+    )
   }
 
   return (
     <SafeAreaView className="flex-1 bg-slate-50 dark:bg-canvas" edges={["top"]}>
       <ScrollView
         className="flex-1 px-5"
-        contentContainerStyle={{ paddingBottom: 32 }}
+        contentContainerStyle={{ paddingBottom: space.lg + 8 }}
         keyboardShouldPersistTaps="handled"
         nestedScrollEnabled
       >
         <ScreenHeader
           eyebrow="Visual diff"
           title="Compare"
-          subtitle="Drag the slider to reveal the story between photos."
+          subtitle="Drag the slider to compare the same angle between two dates."
           leftAccessory={<Columns2 size={28} color={theme.accent} />}
           right={
-            <Pressable
+            <PressableScale
               accessibilityRole="button"
+              accessibilityLabel="Share and export options"
+              accessibilityHint="Shows buttons to share the earlier or later photo"
               hitSlop={12}
-              onPress={() => setShowShareRow((v) => !v)}
-              className="rounded-full border border-slate-200 bg-white p-2 dark:border-white/15 dark:bg-elevated"
+              className="min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-slate-200 bg-white dark:border-white/15 dark:bg-elevated"
+              onPress={() => {
+                lightImpact()
+                setShowShareRow((v) => !v)
+              }}
+              hapticOnPressIn={false}
             >
               <MoreHorizontal size={22} color={theme.accent} />
-            </Pressable>
+            </PressableScale>
           }
         />
 
@@ -185,22 +214,30 @@ export default function CompareScreen() {
           horizontal
           showsHorizontalScrollIndicator={false}
           className="mb-3"
+          decelerationRate="fast"
+          snapToInterval={CHIP_SNAP}
+          snapToAlignment="start"
+          contentContainerStyle={{ paddingRight: space.md }}
         >
-          {sortedAsc.map((e) => (
-            <Pressable
-              key={e.id}
-              onPress={() => setOlderId(e.id)}
-              className={`mr-2 min-h-[40px] justify-center rounded-2xl border px-3 py-2 ${
-                (olderId ?? defaultOlder?.id) === e.id
-                  ? "border-accent bg-accent-dim"
-                  : "border-slate-200 bg-white dark:border-white/10 dark:bg-elevated"
-              }`}
-            >
-              <Text className="font-inter-medium text-xs text-slate-800 dark:text-vault-fg">
-                {formatShort(e.createdAt)}
-              </Text>
-            </Pressable>
-          ))}
+          {sortedAsc.map((e) => {
+            const selected = effectiveOlderId === e.id
+            return (
+              <PressableScale
+                key={e.id}
+                hapticOnPressIn={false}
+                onPress={() => onPickOlder(e.id)}
+                className={`mr-2 min-h-[44px] min-w-[88px] justify-center rounded-2xl border px-3 py-2 ${
+                  selected
+                    ? "border-accent bg-accent-dim"
+                    : "border-slate-200 bg-white dark:border-white/10 dark:bg-elevated"
+                }`}
+              >
+                <Text className="text-center font-inter-medium text-xs text-slate-800 dark:text-vault-fg">
+                  {formatShort(e.createdAt)}
+                </Text>
+              </PressableScale>
+            )
+          })}
         </ScrollView>
 
         <Text className="mb-2 font-inter-semibold text-[11px] uppercase tracking-[0.12em] text-vault-muted">
@@ -210,22 +247,30 @@ export default function CompareScreen() {
           horizontal
           showsHorizontalScrollIndicator={false}
           className="mb-4"
+          decelerationRate="fast"
+          snapToInterval={CHIP_SNAP}
+          snapToAlignment="start"
+          contentContainerStyle={{ paddingRight: space.md }}
         >
-          {sortedDesc.map((e) => (
-            <Pressable
-              key={e.id}
-              onPress={() => setNewerId(e.id)}
-              className={`mr-2 min-h-[40px] justify-center rounded-2xl border px-3 py-2 ${
-                (newerId ?? defaultNewer?.id) === e.id
-                  ? "border-accent bg-accent-dim"
-                  : "border-slate-200 bg-white dark:border-white/10 dark:bg-elevated"
-              }`}
-            >
-              <Text className="font-inter-medium text-xs text-slate-800 dark:text-vault-fg">
-                {formatShort(e.createdAt)}
-              </Text>
-            </Pressable>
-          ))}
+          {sortedDesc.map((e) => {
+            const selected = effectiveNewerId === e.id
+            return (
+              <PressableScale
+                key={e.id}
+                hapticOnPressIn={false}
+                onPress={() => onPickNewer(e.id)}
+                className={`mr-2 min-h-[44px] min-w-[88px] justify-center rounded-2xl border px-3 py-2 ${
+                  selected
+                    ? "border-accent bg-accent-dim"
+                    : "border-slate-200 bg-white dark:border-white/10 dark:bg-elevated"
+                }`}
+              >
+                <Text className="text-center font-inter-medium text-xs text-slate-800 dark:text-vault-fg">
+                  {formatShort(e.createdAt)}
+                </Text>
+              </PressableScale>
+            )
+          })}
         </ScrollView>
 
         {older && newer ? (
@@ -245,14 +290,14 @@ export default function CompareScreen() {
                 <View className="mt-4 flex-row gap-2">
                   <View className="flex-1">
                     <Button
-                      title="Share earlier"
+                      title="Share earlier photo"
                       variant="secondary"
                       onPress={onShareBefore}
                     />
                   </View>
                   <View className="flex-1">
                     <Button
-                      title="Share later"
+                      title="Share later photo"
                       variant="secondary"
                       onPress={onShareAfter}
                     />
@@ -268,15 +313,17 @@ export default function CompareScreen() {
               </View>
             </>
           ) : (
-            <Card>
-              <Text className="leading-6 text-slate-700 dark:text-vault-muted">
-                One or both entries have no photo for this angle. Pick another
-                angle above, or add that photo in a new entry.
-              </Text>
-            </Card>
+            <Animated.View entering={FadeInDown.duration(240)}>
+              <Card>
+                <Text className="leading-6 text-slate-700 dark:text-vault-muted">
+                  One or both entries have no photo for this angle. Pick another
+                  angle above, or add that photo in a new entry.
+                </Text>
+              </Card>
+            </Animated.View>
           )
         ) : null}
       </ScrollView>
     </SafeAreaView>
-  );
+  )
 }

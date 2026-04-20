@@ -1,14 +1,14 @@
-import React from "react";
-import { Text, View } from "react-native";
+import React from "react"
+import { Text, View } from "react-native"
 
-import { ResolvedExpoImage } from "@/components/media/ResolvedExpoImage";
-import { theme } from "@/utils/theme";
+import { ResolvedExpoImage } from "@/components/media/ResolvedExpoImage"
+import { theme } from "@/utils/theme"
 
 export interface SideBySideProps {
-  beforeUri: string;
-  afterUri: string;
-  beforeLabel: string;
-  afterLabel: string;
+  beforeUri: string
+  afterUri: string
+  beforeLabel: string
+  afterLabel: string
 }
 
 export function SideBySide({
@@ -47,5 +47,5 @@ export function SideBySide({
         </Text>
       </View>
     </View>
-  );
+  )
 }

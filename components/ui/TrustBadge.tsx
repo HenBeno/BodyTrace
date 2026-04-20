@@ -1,12 +1,12 @@
-import { Lock, Smartphone } from "lucide-react-native";
-import React from "react";
-import { Text, View } from "react-native";
+import { Lock, Smartphone } from "lucide-react-native"
+import React from "react"
+import { Text, View } from "react-native"
 
-import { theme } from "@/utils/theme";
+import { theme } from "@/utils/theme"
 
 export interface TrustBadgeProps {
   /** Short line of trust copy */
-  caption?: string;
+  caption?: string
 }
 
 export function TrustBadge({
@@ -20,5 +20,5 @@ export function TrustBadge({
         {caption}
       </Text>
     </View>
-  );
+  )
 }

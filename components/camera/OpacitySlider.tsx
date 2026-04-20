@@ -1,18 +1,18 @@
-import { Ghost } from "lucide-react-native";
-import React from "react";
-import { Text, View } from "react-native";
-import Slider from "@react-native-community/slider";
+import { Ghost } from "lucide-react-native"
+import React from "react"
+import { Text, View } from "react-native"
+import Slider from "@react-native-community/slider"
 
-import { theme } from "@/utils/theme";
+import { theme } from "@/utils/theme"
 
 export interface OpacitySliderProps {
-  value: number;
-  onChange: (value: number) => void;
-  min?: number;
-  max?: number;
-  disabled?: boolean;
+  value: number
+  onChange: (value: number) => void
+  min?: number
+  max?: number
+  disabled?: boolean
   /** Smaller chrome for camera drawer */
-  compact?: boolean;
+  compact?: boolean
 }
 
 /**
@@ -26,9 +26,9 @@ export function OpacitySlider({
   disabled,
   compact,
 }: OpacitySliderProps) {
-  const pct = Math.round((value / max) * 100);
-  const pad = compact ? "px-3 py-2" : "px-4 py-3";
-  const labelCls = compact ? "text-xs" : "text-sm";
+  const pct = Math.round((value / max) * 100)
+  const pad = compact ? "px-3 py-2" : "px-4 py-3"
+  const labelCls = compact ? "text-xs" : "text-sm"
   return (
     <View
       className={`rounded-2xl border border-white/10 bg-canvas/55 ${pad} ${disabled ? "opacity-45" : ""}`}
@@ -63,5 +63,5 @@ export function OpacitySlider({
         thumbTintColor="#f8fafc"
       />
     </View>
-  );
+  )
 }

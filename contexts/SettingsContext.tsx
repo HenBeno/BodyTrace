@@ -6,21 +6,21 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from "react";
+} from "react"
 
-import type { AppSettings } from "@/types";
-import { loadAppSettings, saveAppSettings } from "@/services/database";
-import { syncRemindersWithSettings } from "@/services/reminders";
+import type { AppSettings } from "@/types"
+import { loadAppSettings, saveAppSettings } from "@/services/database"
+import { syncRemindersWithSettings } from "@/services/reminders"
 
 export interface SettingsContextValue {
-  settings: AppSettings;
-  ready: boolean;
-  updateSettings: (partial: Partial<AppSettings>) => Promise<void>;
+  settings: AppSettings
+  ready: boolean
+  updateSettings: (partial: Partial<AppSettings>) => Promise<void>
 }
 
 const SettingsContext = createContext<SettingsContextValue | undefined>(
   undefined,
-);
+)
 
 const DEFAULT_SETTINGS: AppSettings = {
   reminderEnabled: false,
@@ -31,38 +31,38 @@ const DEFAULT_SETTINGS: AppSettings = {
   everyXHours: 4,
   countPerDay: 2,
   biometricEnabled: false,
-};
+}
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
-  const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
-  const [ready, setReady] = useState(false);
-  const settingsRef = useRef(settings);
-  settingsRef.current = settings;
+  const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS)
+  const [ready, setReady] = useState(false)
+  const settingsRef = useRef(settings)
+  settingsRef.current = settings
 
   useEffect(() => {
-    let cancelled = false;
-    (async () => {
+    let cancelled = false
+    ;(async () => {
       try {
-        const s = await loadAppSettings();
+        const s = await loadAppSettings()
         if (!cancelled) {
-          setSettings(s);
-          setReady(true);
+          setSettings(s)
+          setReady(true)
         }
       } catch {
         if (!cancelled) {
-          setSettings(DEFAULT_SETTINGS);
-          setReady(true);
+          setSettings(DEFAULT_SETTINGS)
+          setReady(true)
         }
       }
-    })();
+    })()
     return () => {
-      cancelled = true;
-    };
-  }, []);
+      cancelled = true
+    }
+  }, [])
 
   useEffect(() => {
-    if (!ready) return;
-    void syncRemindersWithSettings(settings);
+    if (!ready) return
+    void syncRemindersWithSettings(settings)
     // Intentionally depend on reminder-related fields only, not whole `settings`
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -75,18 +75,18 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     settings.monthlyDate,
     settings.everyXHours,
     settings.countPerDay,
-  ]);
+  ])
 
   const updateSettings = useCallback(async (partial: Partial<AppSettings>) => {
-    const next = { ...settingsRef.current, ...partial };
-    setSettings(next);
-    settingsRef.current = next;
+    const next = { ...settingsRef.current, ...partial }
+    setSettings(next)
+    settingsRef.current = next
     try {
-      await saveAppSettings(next);
+      await saveAppSettings(next)
     } catch {
       // SQLite may be unavailable on some web builds; keep in-memory settings.
     }
-  }, []);
+  }, [])
 
   const value = useMemo(
     () => ({
@@ -95,19 +95,19 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       updateSettings,
     }),
     [settings, ready, updateSettings],
-  );
+  )
 
   return (
     <SettingsContext.Provider value={value}>
       {children}
     </SettingsContext.Provider>
-  );
+  )
 }
 
 export function useSettings() {
-  const ctx = useContext(SettingsContext);
+  const ctx = useContext(SettingsContext)
   if (!ctx) {
-    throw new Error("useSettings must be used within SettingsProvider");
+    throw new Error("useSettings must be used within SettingsProvider")
   }
-  return ctx;
+  return ctx
 }

@@ -1,14 +1,14 @@
-import { LinearGradient } from "expo-linear-gradient";
-import { Link } from "expo-router";
-import { ChevronRight } from "lucide-react-native";
-import React from "react";
-import { Pressable, Text, View } from "react-native";
-import Animated, { FadeIn } from "react-native-reanimated";
+import { LinearGradient } from "expo-linear-gradient"
+import { Link } from "expo-router"
+import { ChevronRight } from "lucide-react-native"
+import React from "react"
+import { Pressable, Text, View } from "react-native"
+import Animated, { FadeInDown } from "react-native-reanimated"
 
-import { ResolvedExpoImage } from "@/components/media/ResolvedExpoImage";
-import type { Entry } from "@/types";
-import { formatMeasurementDisplay } from "@/utils/measurements";
-import { theme } from "@/utils/theme";
+import { ResolvedExpoImage } from "@/components/media/ResolvedExpoImage"
+import type { Entry } from "@/types"
+import { formatMeasurementDisplay } from "@/utils/measurements"
+import { theme } from "@/utils/theme"
 
 function formatDate(d: Date) {
   return d.toLocaleDateString(undefined, {
@@ -16,37 +16,36 @@ function formatDate(d: Date) {
     month: "short",
     day: "numeric",
     year: "numeric",
-  });
+  })
 }
 
 export interface TimelineEntryProps {
-  entry: Entry;
-  index: number;
-  isLast: boolean;
+  entry: Entry
+  index: number
+  isLast: boolean
 }
 
 function measurementChips(entry: Entry): { label: string; value: string }[] {
-  const { waist, weight } = entry.measurements;
-  const chips: { label: string; value: string }[] = [];
+  const { waist, weight } = entry.measurements
+  const chips: { label: string; value: string }[] = []
   if (waist)
-    chips.push({ label: "Waist", value: formatMeasurementDisplay(waist) });
+    chips.push({ label: "Waist", value: formatMeasurementDisplay(waist) })
   if (weight)
     chips.push({
       label: "Weight",
       value: formatMeasurementDisplay(weight),
-    });
-  return chips.slice(0, 3);
+    })
+  return chips.slice(0, 3)
 }
 
 export function TimelineEntry({ entry, index, isLast }: TimelineEntryProps) {
-  const chips = measurementChips(entry);
-  const summaryEmpty = chips.length === 0;
-  const heroUri = entry.photos.front ?? entry.photos.side ?? entry.photos.back;
-
+  const chips = measurementChips(entry)
+  const summaryEmpty = chips.length === 0
+  const heroUri = entry.photos.front ?? entry.photos.side ?? entry.photos.back
   return (
     <Link href={`/entry/${entry.id}`} asChild>
       <Pressable accessibilityRole="button">
-        <Animated.View entering={FadeIn.duration(170)}>
+        <Animated.View entering={FadeInDown.duration(200)}>
           <View className="mb-6 flex-row">
             <View className="w-8 items-center pt-1">
               {index > 0 ? (
@@ -99,6 +98,7 @@ export function TimelineEntry({ entry, index, isLast }: TimelineEntryProps) {
                       <Text
                         className="flex-1 font-inter-bold text-xl text-white"
                         numberOfLines={1}
+                        maxFontSizeMultiplier={1.35}
                       >
                         Progress check-in
                       </Text>
@@ -137,5 +137,5 @@ export function TimelineEntry({ entry, index, isLast }: TimelineEntryProps) {
         </Animated.View>
       </Pressable>
     </Link>
-  );
+  )
 }

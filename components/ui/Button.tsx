@@ -1,34 +1,32 @@
-import React from "react";
-import {
-  ActivityIndicator,
-  Pressable,
-  Text,
-  type PressableProps,
-} from "react-native";
+import React from "react"
+import { ActivityIndicator, Text, type PressableProps } from "react-native"
 
-import { theme } from "@/utils/theme";
+import { PressableScale } from "@/components/ui/PressableScale"
+import { theme } from "@/utils/theme"
 
-type Variant = "primary" | "secondary" | "ghost";
+type Variant = "primary" | "secondary" | "ghost"
 
 export interface ButtonProps extends PressableProps {
-  title: string;
-  variant?: Variant;
-  loading?: boolean;
-  className?: string;
+  title: string
+  variant?: Variant
+  loading?: boolean
+  className?: string
+  /** @default true */
+  hapticOnPressIn?: boolean
 }
 
 const variantClasses: Record<Variant, string> = {
-  primary: "bg-accent active:opacity-90",
+  primary: "bg-accent",
   secondary:
-    "border border-slate-300/90 bg-slate-100 active:opacity-90 dark:border-white/15 dark:bg-elevated",
-  ghost: "bg-transparent active:opacity-80",
-};
+    "border border-slate-300/90 bg-slate-100 dark:border-white/15 dark:bg-elevated",
+  ghost: "bg-transparent",
+}
 
 const textClasses: Record<Variant, string> = {
   primary: "text-canvas font-inter-semibold",
   secondary: "text-slate-900 font-inter-semibold dark:text-vault-fg",
   ghost: "text-accent font-inter-semibold",
-};
+}
 
 export function Button({
   title,
@@ -36,13 +34,15 @@ export function Button({
   loading,
   disabled,
   className = "",
+  hapticOnPressIn = true,
   ...rest
 }: ButtonProps) {
-  const isDisabled = disabled || loading;
+  const isDisabled = disabled || loading
   return (
-    <Pressable
+    <PressableScale
       accessibilityRole="button"
       disabled={isDisabled}
+      hapticOnPressIn={hapticOnPressIn && !isDisabled}
       className={`min-h-[52px] items-center justify-center rounded-2xl px-5 py-3.5 ${variantClasses[variant]} ${isDisabled ? "opacity-50" : ""} ${className}`}
       {...rest}
     >
@@ -55,6 +55,6 @@ export function Button({
           {title}
         </Text>
       )}
-    </Pressable>
-  );
+    </PressableScale>
+  )
 }

@@ -1,25 +1,25 @@
-import React from "react";
-import { StyleSheet, useWindowDimensions, View } from "react-native";
+import React from "react"
+import { StyleSheet, useWindowDimensions, View } from "react-native"
 
 export interface AlignmentGuideProps {
-  visible?: boolean;
+  visible?: boolean
 }
 
-const lineColor = "rgba(255,255,255,0.32)";
+const lineColor = "rgba(255,255,255,0.32)"
 
 /**
  * Rule-of-thirds grid + vertical center line to help match pose and framing.
  */
 export function AlignmentGuide({ visible = true }: AlignmentGuideProps) {
-  const { width, height } = useWindowDimensions();
+  const { width, height } = useWindowDimensions()
 
-  if (!visible) return null;
+  if (!visible) return null
 
-  const v1 = width / 3;
-  const v2 = (width * 2) / 3;
-  const h1 = height / 3;
-  const h2 = (height * 2) / 3;
-  const centerColor = "rgba(56, 189, 248, 0.38)";
+  const v1 = width / 3
+  const v2 = (width * 2) / 3
+  const h1 = height / 3
+  const h2 = (height * 2) / 3
+  const centerColor = "rgba(56, 189, 248, 0.38)"
 
   return (
     <View pointerEvents="none" style={StyleSheet.absoluteFill}>
@@ -34,7 +34,7 @@ export function AlignmentGuide({ visible = true }: AlignmentGuideProps) {
         ]}
       />
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -50,4 +50,4 @@ const styles = StyleSheet.create({
     right: 0,
     height: 1,
   },
-});
+})

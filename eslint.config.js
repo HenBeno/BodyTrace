@@ -1,6 +1,6 @@
-const expoConfig = require("eslint-config-expo/flat");
-const { defineConfig } = require("eslint/config");
-const globals = require("globals");
+const expoConfig = require("eslint-config-expo/flat")
+const { defineConfig } = require("eslint/config")
+const globals = require("globals")
 
 module.exports = defineConfig([
   {
@@ -24,4 +24,4 @@ module.exports = defineConfig([
       },
     },
   },
-]);
+])

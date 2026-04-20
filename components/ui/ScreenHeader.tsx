@@ -1,13 +1,13 @@
-import React, { type ReactNode } from "react";
-import { Text, View } from "react-native";
+import React, { type ReactNode } from "react"
+import { Text, View } from "react-native"
 
 export interface ScreenHeaderProps {
   /** Small caps label above title */
-  eyebrow?: string;
-  title: string;
-  subtitle?: string;
-  leftAccessory?: ReactNode;
-  right?: ReactNode;
+  eyebrow?: string
+  title: string
+  subtitle?: string
+  leftAccessory?: ReactNode
+  right?: ReactNode
 }
 
 export function ScreenHeader({
@@ -30,7 +30,10 @@ export function ScreenHeader({
                 {eyebrow}
               </Text>
             ) : null}
-            <Text className="font-inter-bold text-2xl text-slate-900 dark:text-vault-fg">
+            <Text
+              className="font-inter-bold text-2xl text-slate-900 dark:text-vault-fg"
+              maxFontSizeMultiplier={1.35}
+            >
               {title}
             </Text>
             {subtitle ? (
@@ -43,5 +46,5 @@ export function ScreenHeader({
         {right ? <View className="shrink-0">{right}</View> : null}
       </View>
     </View>
-  );
+  )
 }

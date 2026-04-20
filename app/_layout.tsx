@@ -1,41 +1,41 @@
 import {
-  Inter_400Regular,
-  Inter_500Medium,
-  Inter_600SemiBold,
-  Inter_700Bold,
-} from "@expo-google-fonts/inter";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+    Inter_700Bold,
+} from "@expo-google-fonts/inter"
+import FontAwesome from "@expo/vector-icons/FontAwesome"
 import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
-import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
-import { useEffect, useMemo } from "react";
-import { useColorScheme } from "react-native";
+    DarkTheme,
+    DefaultTheme,
+    ThemeProvider,
+} from "@react-navigation/native"
+import { useFonts } from "expo-font"
+import { Stack } from "expo-router"
+import * as SplashScreen from "expo-splash-screen"
+import { useEffect, useMemo } from "react"
+import { useColorScheme } from "react-native"
 /* eslint-disable import/no-duplicates -- RNGH requires side-effect import before named import from same package */
-import "react-native-gesture-handler";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import "react-native-gesture-handler"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
 /* eslint-enable import/no-duplicates */
-import "react-native-reanimated";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import "react-native-reanimated"
+import { SafeAreaProvider } from "react-native-safe-area-context"
 
-import "../global.css";
+import "../global.css"
 
-import { SecurityGate } from "@/components/auth/SecurityGate";
-import { EntriesProvider } from "@/contexts/EntriesContext";
-import { SettingsProvider } from "@/contexts/SettingsContext";
-import { theme } from "@/utils/theme";
+import { SecurityGate } from "@/components/auth/SecurityGate"
+import { EntriesProvider } from "@/contexts/EntriesContext"
+import { SettingsProvider } from "@/contexts/SettingsContext"
+import { theme } from "@/utils/theme"
 
-export { ErrorBoundary } from "expo-router";
+export { ErrorBoundary } from "expo-router"
 
 export const unstable_settings = {
   initialRouteName: "(tabs)",
-};
+}
 
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync()
 
 const VaultDarkTheme = {
   ...DarkTheme,
@@ -48,7 +48,7 @@ const VaultDarkTheme = {
     border: "rgba(255,255,255,0.12)",
     notification: theme.accent,
   },
-};
+}
 
 const VaultLightTheme = {
   ...DefaultTheme,
@@ -61,7 +61,7 @@ const VaultLightTheme = {
     border: "rgba(15,23,42,0.08)",
     notification: theme.accent,
   },
-};
+}
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -71,29 +71,29 @@ export default function RootLayout() {
     Inter_700Bold,
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     ...FontAwesome.font,
-  });
+  })
 
   useEffect(() => {
-    if (error) throw error;
-  }, [error]);
+    if (error) throw error
+  }, [error])
 
   useEffect(() => {
     if (loaded) {
-      SplashScreen.hideAsync();
+      SplashScreen.hideAsync()
     }
-  }, [loaded]);
+  }, [loaded])
 
   if (!loaded) {
-    return null;
+    return null
   }
 
-  return <RootLayoutNav />;
+  return <RootLayoutNav />
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === "dark";
-  const navTheme = isDark ? VaultDarkTheme : VaultLightTheme;
+  const colorScheme = useColorScheme()
+  const isDark = colorScheme === "dark"
+  const navTheme = isDark ? VaultDarkTheme : VaultLightTheme
   const stackBg = useMemo(
     () => ({
       backgroundColor: isDark
@@ -101,7 +101,7 @@ function RootLayoutNav() {
         : VaultLightTheme.colors.background,
     }),
     [isDark],
-  );
+  )
 
   return (
     <GestureHandlerRootView
@@ -116,7 +116,12 @@ function RootLayoutNav() {
           <SettingsProvider>
             <SecurityGate>
               <EntriesProvider>
-                <Stack screenOptions={{ contentStyle: stackBg }}>
+                <Stack
+                  screenOptions={{
+                    contentStyle: stackBg,
+                    animation: "slide_from_right",
+                  }}
+                >
                   <Stack.Screen
                     name="(tabs)"
                     options={{ headerShown: false }}
@@ -129,5 +134,5 @@ function RootLayoutNav() {
         </ThemeProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
-  );
+  )
 }

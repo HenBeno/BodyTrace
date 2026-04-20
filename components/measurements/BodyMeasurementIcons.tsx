@@ -1,12 +1,12 @@
-import { Image } from "expo-image";
-import React from "react";
-import { View } from "react-native";
-import Svg, { Ellipse, Path } from "react-native-svg";
+import { Image } from "expo-image"
+import React from "react"
+import { View } from "react-native"
+import Svg, { Ellipse, Path } from "react-native-svg"
 
-import type { Entry } from "@/types";
-import { theme } from "@/utils/theme";
+import type { Entry } from "@/types"
+import { theme } from "@/utils/theme"
 
-export type BodyMeasurementKey = keyof Entry["measurements"];
+export type BodyMeasurementKey = keyof Entry["measurements"]
 
 /**
  * Order matches supplied artwork: chest → waist → hips → neck → arm → thigh.
@@ -19,18 +19,18 @@ const RASTER_SOURCES: Record<Exclude<BodyMeasurementKey, "weight">, number> = {
   neck: require("../../assets/measurement-icons/Screenshot 2026-04-16 024541.png"),
   arm: require("../../assets/measurement-icons/Screenshot 2026-04-16 024545.png"),
   thigh: require("../../assets/measurement-icons/Screenshot 2026-04-16 024550.png"),
-};
+}
 
-const VB = 36;
+const VB = 36
 
 function WeightPlaceholderGlyph({
   size,
   color,
 }: {
-  size: number;
-  color: string;
+  size: number
+  color: string
 }) {
-  const o = "rgba(148,163,184,0.55)";
+  const o = "rgba(148,163,184,0.55)"
   return (
     <Svg width={size} height={size} viewBox={`0 0 ${VB} ${VB}`}>
       <Path
@@ -75,16 +75,16 @@ function WeightPlaceholderGlyph({
         fillOpacity={0.16}
       />
     </Svg>
-  );
+  )
 }
 
 type ZoneIconProps = {
-  zone: BodyMeasurementKey;
-  size?: number;
-  accessibilityLabel: string;
+  zone: BodyMeasurementKey
+  size?: number
+  accessibilityLabel: string
   /** Stroke / accents for the temporary weight glyph only */
-  accentColor?: string;
-};
+  accentColor?: string
+}
 
 export function BodyMeasurementZoneIcon({
   zone,
@@ -92,7 +92,7 @@ export function BodyMeasurementZoneIcon({
   accessibilityLabel,
   accentColor = theme.accent,
 }: ZoneIconProps) {
-  const box = { width: size, height: size, overflow: "hidden" as const };
+  const box = { width: size, height: size, overflow: "hidden" as const }
 
   if (zone === "weight") {
     return (
@@ -104,7 +104,7 @@ export function BodyMeasurementZoneIcon({
       >
         <WeightPlaceholderGlyph size={size} color={accentColor} />
       </View>
-    );
+    )
   }
   return (
     <View
@@ -125,17 +125,17 @@ export function BodyMeasurementZoneIcon({
         accessibilityIgnoresInvertColors
       />
     </View>
-  );
+  )
 }
 
 type GlyphProps = {
-  size?: number;
-  accentColor: string;
-  outlineColor?: string;
-  accessibilityLabel: string;
-};
+  size?: number
+  accentColor: string
+  outlineColor?: string
+  accessibilityLabel: string
+}
 
-const NOTES_VB = 36;
+const NOTES_VB = 36
 
 export function NotesGlyphIcon({
   size = 20,
@@ -172,5 +172,5 @@ export function NotesGlyphIcon({
         />
       </Svg>
     </View>
-  );
+  )
 }

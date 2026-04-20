@@ -1,30 +1,27 @@
-import { Database, Fingerprint, Shield } from "lucide-react-native";
-import React, { useCallback, useState } from "react";
+import { Database, Fingerprint, Shield } from "lucide-react-native"
+import React, { useCallback, useState } from "react"
 import {
-  ActivityIndicator,
-  Alert,
-  Pressable,
-  ScrollView,
-  Switch,
-  Text,
-  useColorScheme,
-  View,
-} from "react-native";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+    ActivityIndicator,
+    Alert,
+    Pressable,
+    ScrollView,
+    Switch,
+    Text,
+    useColorScheme,
+    View,
+} from "react-native"
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 
-import { Card } from "@/components/ui/Card";
-import { ScreenHeader } from "@/components/ui/ScreenHeader";
-import { TrustBadge } from "@/components/ui/TrustBadge";
-import { useSettings } from "@/contexts/SettingsContext";
+import { Card } from "@/components/ui/Card"
+import { ScreenHeader } from "@/components/ui/ScreenHeader"
+import { TrustBadge } from "@/components/ui/TrustBadge"
+import { useSettings } from "@/contexts/SettingsContext"
 import {
-  authenticateWithBiometrics,
-  canUseBiometric,
-} from "@/services/biometric";
-import type { AppSettings, ReminderMode } from "@/types";
-import { theme } from "@/utils/theme";
+    authenticateWithBiometrics,
+    canUseBiometric,
+} from "@/services/biometric"
+import type { AppSettings, ReminderMode } from "@/types"
+import { theme } from "@/utils/theme"
 
 const WEEKDAY_OPTIONS = [
   { value: 0, label: "Sun" },
@@ -34,12 +31,12 @@ const WEEKDAY_OPTIONS = [
   { value: 4, label: "Thu" },
   { value: 5, label: "Fri" },
   { value: 6, label: "Sat" },
-] as const;
+] as const
 
 const REMINDER_MODES: {
-  value: ReminderMode;
-  label: string;
-  description: string;
+  value: ReminderMode
+  label: string
+  description: string
 }[] = [
   {
     value: "daily",
@@ -66,106 +63,106 @@ const REMINDER_MODES: {
     label: "Count per day",
     description: "Spread reminders evenly throughout the day.",
   },
-];
+]
 
 function clamp(value: number, min: number, max: number) {
-  if (!Number.isFinite(value)) return min;
-  return Math.min(max, Math.max(min, Math.round(value)));
+  if (!Number.isFinite(value)) return min
+  return Math.min(max, Math.max(min, Math.round(value)))
 }
 
 function pad2(value: number) {
-  return String(value).padStart(2, "0");
+  return String(value).padStart(2, "0")
 }
 
 function formatTime(hour: number, minute: number) {
-  return `${pad2(hour)}:${pad2(minute)}`;
+  return `${pad2(hour)}:${pad2(minute)}`
 }
 
 function reminderPreview(settings: AppSettings) {
-  if (!settings.reminderEnabled) return "Reminders are currently off.";
+  if (!settings.reminderEnabled) return "Reminders are currently off."
   switch (settings.reminderMode) {
     case "daily":
-      return `Every day at ${formatTime(settings.reminderTime.hour, settings.reminderTime.minute)}.`;
+      return `Every day at ${formatTime(settings.reminderTime.hour, settings.reminderTime.minute)}.`
     case "everyXHours":
-      return `Every ${settings.everyXHours} hour${settings.everyXHours === 1 ? "" : "s"}.`;
+      return `Every ${settings.everyXHours} hour${settings.everyXHours === 1 ? "" : "s"}.`
     case "weeklyDays": {
       const selected = WEEKDAY_OPTIONS.filter((day) =>
         settings.weeklyDays.includes(day.value),
-      ).map((day) => day.label);
-      const dayCopy = selected.length > 0 ? selected.join(", ") : "Mon";
-      return `${dayCopy} at ${formatTime(settings.reminderTime.hour, settings.reminderTime.minute)}.`;
+      ).map((day) => day.label)
+      const dayCopy = selected.length > 0 ? selected.join(", ") : "Mon"
+      return `${dayCopy} at ${formatTime(settings.reminderTime.hour, settings.reminderTime.minute)}.`
     }
     case "monthlyDate":
-      return `Day ${settings.monthlyDate} of each month at ${formatTime(settings.reminderTime.hour, settings.reminderTime.minute)}.`;
+      return `Day ${settings.monthlyDate} of each month at ${formatTime(settings.reminderTime.hour, settings.reminderTime.minute)}.`
     case "countPerDay":
-      return `${settings.countPerDay} reminders each day, spaced between 08:00 and 22:00.`;
+      return `${settings.countPerDay} reminders each day, spaced between 08:00 and 22:00.`
     default:
-      return "Custom reminder schedule is active.";
+      return "Custom reminder schedule is active."
   }
 }
 
 export default function SettingsScreen() {
-  const insets = useSafeAreaInsets();
-  const { settings, ready, updateSettings } = useSettings();
-  const [busy, setBusy] = useState(false);
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === "dark";
+  const insets = useSafeAreaInsets()
+  const { settings, ready, updateSettings } = useSettings()
+  const [busy, setBusy] = useState(false)
+  const colorScheme = useColorScheme()
+  const isDark = colorScheme === "dark"
 
   const runUpdate = useCallback(
     async (partial: Partial<AppSettings>) => {
-      setBusy(true);
+      setBusy(true)
       try {
-        await updateSettings(partial);
+        await updateSettings(partial)
       } finally {
-        setBusy(false);
+        setBusy(false)
       }
     },
     [updateSettings],
-  );
+  )
 
   const onBiometricToggle = useCallback(
     async (enabled: boolean) => {
       if (!enabled) {
-        await runUpdate({ biometricEnabled: false });
-        return;
+        await runUpdate({ biometricEnabled: false })
+        return
       }
-      setBusy(true);
+      setBusy(true)
       try {
-        const supported = await canUseBiometric();
+        const supported = await canUseBiometric()
         if (!supported) {
           Alert.alert(
             "Biometrics unavailable",
             "This device has no enrolled Face ID, Touch ID, or fingerprint.",
-          );
-          return;
+          )
+          return
         }
-        const ok = await authenticateWithBiometrics("Turn on app lock");
-        if (!ok) return;
-        await updateSettings({ biometricEnabled: true });
+        const ok = await authenticateWithBiometrics("Turn on app lock")
+        if (!ok) return
+        await updateSettings({ biometricEnabled: true })
       } finally {
-        setBusy(false);
+        setBusy(false)
       }
     },
     [runUpdate, updateSettings],
-  );
+  )
 
   const onReminderToggle = useCallback(
     async (enabled: boolean) => {
-      await runUpdate({ reminderEnabled: enabled });
+      await runUpdate({ reminderEnabled: enabled })
     },
     [runUpdate],
-  );
+  )
 
   const onReminderModeChange = useCallback(
     async (nextMode: ReminderMode) => {
-      const next: Partial<AppSettings> = { reminderMode: nextMode };
+      const next: Partial<AppSettings> = { reminderMode: nextMode }
       if (nextMode === "weeklyDays" && settings.weeklyDays.length === 0) {
-        next.weeklyDays = [1];
+        next.weeklyDays = [1]
       }
-      await runUpdate(next);
+      await runUpdate(next)
     },
     [runUpdate, settings.weeklyDays.length],
-  );
+  )
 
   const adjustReminderTime = useCallback(
     async (part: "hour" | "minute", delta: number) => {
@@ -182,51 +179,51 @@ export default function SettingsScreen() {
             59,
           ),
         },
-      });
+      })
     },
     [runUpdate, settings.reminderTime.hour, settings.reminderTime.minute],
-  );
+  )
 
   const onToggleWeeklyDay = useCallback(
     async (dayValue: number) => {
-      const hasDay = settings.weeklyDays.includes(dayValue);
+      const hasDay = settings.weeklyDays.includes(dayValue)
       const nextDays = hasDay
         ? settings.weeklyDays.filter((d) => d !== dayValue)
-        : [...settings.weeklyDays, dayValue];
-      const normalized = [...new Set(nextDays)].sort((a, b) => a - b);
+        : [...settings.weeklyDays, dayValue]
+      const normalized = [...new Set(nextDays)].sort((a, b) => a - b)
       await runUpdate({
         weeklyDays: normalized.length > 0 ? normalized : [dayValue],
-      });
+      })
     },
     [runUpdate, settings.weeklyDays],
-  );
+  )
 
   const adjustMonthlyDate = useCallback(
     async (delta: number) => {
       await runUpdate({
         monthlyDate: clamp(settings.monthlyDate + delta, 1, 28),
-      });
+      })
     },
     [runUpdate, settings.monthlyDate],
-  );
+  )
 
   const adjustEveryXHours = useCallback(
     async (delta: number) => {
       await runUpdate({
         everyXHours: clamp(settings.everyXHours + delta, 1, 23),
-      });
+      })
     },
     [runUpdate, settings.everyXHours],
-  );
+  )
 
   const adjustCountPerDay = useCallback(
     async (delta: number) => {
       await runUpdate({
         countPerDay: clamp(settings.countPerDay + delta, 1, 6),
-      });
+      })
     },
     [runUpdate, settings.countPerDay],
-  );
+  )
 
   const renderStepper = (
     label: string,
@@ -243,7 +240,7 @@ export default function SettingsScreen() {
           accessibilityRole="button"
           disabled={busy}
           onPress={() => {
-            void onMinus();
+            void onMinus()
           }}
           className="min-h-[44px] min-w-[44px] items-center justify-center rounded-2xl border border-slate-200 bg-slate-100 active:opacity-80 dark:border-white/15 dark:bg-elevated"
         >
@@ -261,7 +258,7 @@ export default function SettingsScreen() {
           accessibilityRole="button"
           disabled={busy}
           onPress={() => {
-            void onPlus();
+            void onPlus()
           }}
           className="min-h-[44px] min-w-[44px] items-center justify-center rounded-2xl border border-slate-200 bg-slate-100 active:opacity-80 dark:border-white/15 dark:bg-elevated"
         >
@@ -271,17 +268,17 @@ export default function SettingsScreen() {
         </Pressable>
       </View>
     </View>
-  );
+  )
 
   const selectedMode =
     REMINDER_MODES.find((mode) => mode.value === settings.reminderMode) ??
-    REMINDER_MODES[0];
+    REMINDER_MODES[0]
   const showTimeControls =
     settings.reminderMode === "daily" ||
     settings.reminderMode === "weeklyDays" ||
-    settings.reminderMode === "monthlyDate";
+    settings.reminderMode === "monthlyDate"
 
-  const scrollBottomPad = Math.max(insets.bottom, 16) + 28;
+  const scrollBottomPad = Math.max(insets.bottom, 16) + 28
 
   if (!ready) {
     return (
@@ -291,13 +288,13 @@ export default function SettingsScreen() {
       >
         <ActivityIndicator color={theme.accent} />
       </SafeAreaView>
-    );
+    )
   }
 
   const vaultCopy = {
     title: "Your vault is local",
     body: "Timeline, photos, and measurements stay in a private app folder with a local SQLite database. Nothing is uploaded by BodyTrace.",
-  };
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-slate-50 dark:bg-canvas" edges={["top"]}>
@@ -412,14 +409,14 @@ export default function SettingsScreen() {
             </Text>
             <View className="mt-3 flex-row flex-wrap gap-2">
               {REMINDER_MODES.map((mode) => {
-                const selected = settings.reminderMode === mode.value;
+                const selected = settings.reminderMode === mode.value
                 return (
                   <Pressable
                     key={mode.value}
                     accessibilityRole="button"
                     disabled={busy}
                     onPress={() => {
-                      void onReminderModeChange(mode.value);
+                      void onReminderModeChange(mode.value)
                     }}
                     className={`rounded-2xl border px-3 py-2 ${
                       selected
@@ -437,7 +434,7 @@ export default function SettingsScreen() {
                       {mode.label}
                     </Text>
                   </Pressable>
-                );
+                )
               })}
             </View>
             <Text className="mt-3 text-sm leading-6 text-slate-600 dark:text-vault-muted">
@@ -469,14 +466,14 @@ export default function SettingsScreen() {
               </Text>
               <View className="mt-3 flex-row flex-wrap gap-2">
                 {WEEKDAY_OPTIONS.map((day) => {
-                  const selected = settings.weeklyDays.includes(day.value);
+                  const selected = settings.weeklyDays.includes(day.value)
                   return (
                     <Pressable
                       key={day.value}
                       accessibilityRole="button"
                       disabled={busy}
                       onPress={() => {
-                        void onToggleWeeklyDay(day.value);
+                        void onToggleWeeklyDay(day.value)
                       }}
                       className={`rounded-2xl border px-3 py-2 ${
                         selected
@@ -494,7 +491,7 @@ export default function SettingsScreen() {
                         {day.label}
                       </Text>
                     </Pressable>
-                  );
+                  )
                 })}
               </View>
             </View>
@@ -536,5 +533,5 @@ export default function SettingsScreen() {
         </Card>
       </ScrollView>
     </SafeAreaView>
-  );
+  )
 }

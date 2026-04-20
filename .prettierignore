@@ -1,14 +1,9 @@
 node_modules
+.cursor/skills
 .expo
 dist
 dist-web
-web-build
 coverage
-.cursor
-package-lock.json
-*.lock
-android
 ios
-.kotlin
-stitch_bodytrace_private_fitness_journal/
-**/*.plan.md
+android
+package-lock.json

@@ -1,84 +1,82 @@
-import { CameraView, useCameraPermissions } from "expo-camera";
-import { Stack, router } from "expo-router";
-import { ChevronLeft, Sparkles } from "lucide-react-native";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import { CameraView, useCameraPermissions } from "expo-camera"
+import { Stack, router } from "expo-router"
+import { ChevronLeft, Sparkles } from "lucide-react-native"
+import React, { useCallback, useMemo, useRef, useState } from "react"
 import {
-  ActivityIndicator,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  useColorScheme,
-} from "react-native";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+    ActivityIndicator,
+    Alert,
+    KeyboardAvoidingView,
+    Platform,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    View,
+    useColorScheme,
+} from "react-native"
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 
-import { AlignmentGuide } from "@/components/camera/AlignmentGuide";
-import { CameraControlSheet } from "@/components/camera/CameraControlSheet";
-import { GhostOverlay } from "@/components/camera/GhostOverlay";
+import { AlignmentGuide } from "@/components/camera/AlignmentGuide"
+import { CameraControlSheet } from "@/components/camera/CameraControlSheet"
+import { GhostOverlay } from "@/components/camera/GhostOverlay"
 import {
-  BodyMeasurementZoneIcon,
-  NotesGlyphIcon,
-} from "@/components/measurements/BodyMeasurementIcons";
-import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
-import { SegmentedControl } from "@/components/ui/SegmentedControl";
-import { useEntries } from "@/contexts/EntriesContext";
-import type { CircumferenceUnit, Entry, PhotoAngle, WeightUnit } from "@/types";
-import { MEASUREMENT_GROUPS, MEASUREMENT_LABELS } from "@/utils/constants";
+    BodyMeasurementZoneIcon,
+    NotesGlyphIcon,
+} from "@/components/measurements/BodyMeasurementIcons"
+import { Button } from "@/components/ui/Button"
+import { Card } from "@/components/ui/Card"
+import { SegmentedControl } from "@/components/ui/SegmentedControl"
+import { useEntries } from "@/contexts/EntriesContext"
+import { success } from "@/services/haptics"
+import type { CircumferenceUnit, Entry, PhotoAngle, WeightUnit } from "@/types"
+import { MEASUREMENT_GROUPS, MEASUREMENT_LABELS } from "@/utils/constants"
 import {
-  CIRCUMFERENCE_UNIT_OPTIONS,
-  WEIGHT_UNIT_OPTIONS,
-  defaultUnitForKey,
-  isWeightMeasurementKey,
-} from "@/utils/measurements";
-import { safeGoBack } from "@/utils/navigation";
-import { theme } from "@/utils/theme";
+    CIRCUMFERENCE_UNIT_OPTIONS,
+    WEIGHT_UNIT_OPTIONS,
+    defaultUnitForKey,
+    isWeightMeasurementKey,
+} from "@/utils/measurements"
+import { safeGoBack } from "@/utils/navigation"
+import { theme } from "@/utils/theme"
 
-const PHOTO_ORDER: PhotoAngle[] = ["front", "side", "back"];
+const PHOTO_ORDER: PhotoAngle[] = ["front", "side", "back"]
 
 function newEntryId() {
-  return `e-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+  return `e-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
 }
 
 function parseOptionalMeasurement(raw: string): number | undefined {
-  const t = raw.trim();
-  if (!t) return undefined;
-  const n = Number(t);
-  return Number.isFinite(n) ? n : undefined;
+  const t = raw.trim()
+  if (!t) return undefined
+  const n = Number(t)
+  return Number.isFinite(n) ? n : undefined
 }
 
 export default function NewEntryScreen() {
-  const colorScheme = useColorScheme();
-  const measurementOutline = colorScheme === "dark" ? "#94a3b8" : "#64748b";
-  const insets = useSafeAreaInsets();
-  const { addEntry, entries, getGhostUriForAngle } = useEntries();
-  const [permission, requestPermission] = useCameraPermissions();
-  const cameraRef = useRef<CameraView>(null);
+  const colorScheme = useColorScheme()
+  const measurementOutline = colorScheme === "dark" ? "#94a3b8" : "#64748b"
+  const insets = useSafeAreaInsets()
+  const { addEntry, entries, getGhostUriForAngle } = useEntries()
+  const [permission, requestPermission] = useCameraPermissions()
+  const cameraRef = useRef<CameraView>(null)
 
-  const [phase, setPhase] = useState<"photos" | "details">("photos");
-  const [photoIndex, setPhotoIndex] = useState(0);
+  const [phase, setPhase] = useState<"photos" | "details">("photos")
+  const [photoIndex, setPhotoIndex] = useState(0)
   const [captured, setCaptured] = useState<Partial<Record<PhotoAngle, string>>>(
     {},
-  );
-  const [referenceEntryId, setReferenceEntryId] = useState<string | null>(null);
-  const [ghostOpacity, setGhostOpacity] = useState(0.28);
-  const [ghostEnabled, setGhostEnabled] = useState(true);
-  const [showGuide, setShowGuide] = useState(true);
-  const [capturing, setCapturing] = useState(false);
+  )
+  const [referenceEntryId, setReferenceEntryId] = useState<string | null>(null)
+  const [ghostOpacity, setGhostOpacity] = useState(0.28)
+  const [ghostEnabled, setGhostEnabled] = useState(true)
+  const [showGuide, setShowGuide] = useState(true)
+  const [capturing, setCapturing] = useState(false)
 
-  const currentAngle = PHOTO_ORDER[photoIndex] ?? "front";
+  const currentAngle = PHOTO_ORDER[photoIndex] ?? "front"
   const ghostUri = useMemo(
     () => getGhostUriForAngle(currentAngle, referenceEntryId),
     [currentAngle, getGhostUriForAngle, referenceEntryId],
-  );
+  )
 
   const sortedReferences = useMemo(
     () =>
@@ -86,126 +84,127 @@ export default function NewEntryScreen() {
         (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
       ),
     [entries],
-  );
+  )
 
   const [measurementInputs, setMeasurementInputs] = useState<
     Record<string, string>
-  >({});
+  >({})
   const [measurementUnits, setMeasurementUnits] = useState<
     Record<keyof Entry["measurements"], CircumferenceUnit | WeightUnit>
   >(() => {
     const init = {} as Record<
       keyof Entry["measurements"],
       CircumferenceUnit | WeightUnit
-    >;
+    >
     for (const { key } of MEASUREMENT_LABELS) {
-      init[key] = defaultUnitForKey(key);
+      init[key] = defaultUnitForKey(key)
     }
-    return init;
-  });
-  const [notes, setNotes] = useState("");
-  const [saving, setSaving] = useState(false);
+    return init
+  })
+  const [notes, setNotes] = useState("")
+  const [saving, setSaving] = useState(false)
 
   const capturedCount = useMemo(
     () => PHOTO_ORDER.reduce((n, a) => n + (captured[a] ? 1 : 0), 0),
     [captured],
-  );
+  )
 
   const advancePhotoStep = useCallback(() => {
     if (photoIndex < PHOTO_ORDER.length - 1) {
-      setPhotoIndex((i) => i + 1);
+      setPhotoIndex((i) => i + 1)
     } else {
-      setPhase("details");
+      setPhase("details")
     }
-  }, [photoIndex]);
+  }, [photoIndex])
 
   const onSkipCurrentAngle = useCallback(() => {
     if (photoIndex < PHOTO_ORDER.length - 1) {
-      setPhotoIndex((i) => i + 1);
-      return;
+      setPhotoIndex((i) => i + 1)
+      return
     }
     if (capturedCount === 0) {
       Alert.alert(
         "Photo required",
         "Capture at least one angle before continuing to measurements.",
-      );
-      return;
+      )
+      return
     }
-    setPhase("details");
-  }, [capturedCount, photoIndex]);
+    setPhase("details")
+  }, [capturedCount, photoIndex])
 
   const onCapture = useCallback(async () => {
-    if (Platform.OS === "web") return;
+    if (Platform.OS === "web") return
     try {
-      setCapturing(true);
+      setCapturing(true)
       const photo = await cameraRef.current?.takePictureAsync({
         quality: 0.92,
         skipProcessing: false,
-      });
+      })
       if (!photo?.uri) {
-        Alert.alert("Capture failed", "No image was returned from the camera.");
-        return;
+        Alert.alert("Capture failed", "No image was returned from the camera.")
+        return
       }
-      setCaptured((prev) => ({ ...prev, [currentAngle]: photo.uri }));
+      setCaptured((prev) => ({ ...prev, [currentAngle]: photo.uri }))
       if (photoIndex < PHOTO_ORDER.length - 1) {
-        setPhotoIndex((i) => i + 1);
+        setPhotoIndex((i) => i + 1)
       } else {
-        setPhase("details");
+        setPhase("details")
       }
     } catch (e) {
       Alert.alert(
         "Capture failed",
         e instanceof Error ? e.message : "Unknown error",
-      );
+      )
     } finally {
-      setCapturing(false);
+      setCapturing(false)
     }
-  }, [currentAngle, photoIndex]);
+  }, [currentAngle, photoIndex])
 
   const onSave = useCallback(async () => {
     if (capturedCount === 0) {
-      Alert.alert("Photo required", "Add at least one photo before saving.");
-      return;
+      Alert.alert("Photo required", "Add at least one photo before saving.")
+      return
     }
-    const photos: Partial<Record<PhotoAngle, string>> = {};
+    const photos: Partial<Record<PhotoAngle, string>> = {}
     for (const a of PHOTO_ORDER) {
-      const u = captured[a];
-      if (u) photos[a] = u;
+      const u = captured[a]
+      if (u) photos[a] = u
     }
-    const measurements: Entry["measurements"] = {};
+    const measurements: Entry["measurements"] = {}
     for (const { key } of MEASUREMENT_LABELS) {
-      const v = parseOptionalMeasurement(measurementInputs[key] ?? "");
-      if (v == null) continue;
-      const unit = measurementUnits[key] ?? defaultUnitForKey(key);
+      const v = parseOptionalMeasurement(measurementInputs[key] ?? "")
+      if (v == null) continue
+      const unit = measurementUnits[key] ?? defaultUnitForKey(key)
       if (key === "weight") {
-        measurements.weight = { value: v, unit: unit as WeightUnit };
+        measurements.weight = { value: v, unit: unit as WeightUnit }
       } else {
-        const circKey = key as Exclude<keyof Entry["measurements"], "weight">;
+        const circKey = key as Exclude<keyof Entry["measurements"], "weight">
         measurements[circKey] = {
           value: v,
           unit: unit as CircumferenceUnit,
-        };
+        }
       }
     }
-    const id = newEntryId();
+    const id = newEntryId()
     const entry: Entry = {
       id,
       createdAt: new Date(),
       photos,
       measurements,
       notes: notes.trim() ? notes.trim() : undefined,
-    };
+    }
     try {
-      setSaving(true);
-      await addEntry(entry);
-      router.replace(`/entry/${id}`);
+      setSaving(true)
+      await addEntry(entry)
+      success()
+      router.replace(`/entry/${id}`)
     } catch (e) {
       Alert.alert(
         "Could not save",
         e instanceof Error ? e.message : "Unknown error",
-      );
+      )
     } finally {
-      setSaving(false);
+      setSaving(false)
     }
   }, [
     addEntry,
@@ -214,21 +213,21 @@ export default function NewEntryScreen() {
     measurementInputs,
     measurementUnits,
     notes,
-  ]);
+  ])
 
   const goBackFromDetails = useCallback(() => {
-    setPhase("photos");
-    const firstMissing = PHOTO_ORDER.findIndex((a) => !captured[a]);
-    setPhotoIndex(firstMissing === -1 ? 0 : firstMissing);
-  }, [captured]);
+    setPhase("photos")
+    const firstMissing = PHOTO_ORDER.findIndex((a) => !captured[a])
+    setPhotoIndex(firstMissing === -1 ? 0 : firstMissing)
+  }, [captured])
 
   const onRetakeCurrent = useCallback(() => {
     setCaptured((prev) => {
-      const next = { ...prev };
-      delete next[currentAngle];
-      return next;
-    });
-  }, [currentAngle]);
+      const next = { ...prev }
+      delete next[currentAngle]
+      return next
+    })
+  }, [currentAngle])
 
   if (phase === "details") {
     return (
@@ -285,9 +284,9 @@ export default function NewEntryScreen() {
                 </Text>
                 {group.keys.map((key) => {
                   const label =
-                    MEASUREMENT_LABELS.find((m) => m.key === key)?.label ?? key;
+                    MEASUREMENT_LABELS.find((m) => m.key === key)?.label ?? key
                   const unitVal =
-                    measurementUnits[key] ?? defaultUnitForKey(key);
+                    measurementUnits[key] ?? defaultUnitForKey(key)
                   return (
                     <View
                       key={key}
@@ -350,7 +349,7 @@ export default function NewEntryScreen() {
                         )}
                       </View>
                     </View>
-                  );
+                  )
                 })}
               </Card>
             ))}
@@ -390,7 +389,7 @@ export default function NewEntryScreen() {
           </View>
         </KeyboardAvoidingView>
       </>
-    );
+    )
   }
 
   /* ——— Photo phase ——— */
@@ -414,7 +413,7 @@ export default function NewEntryScreen() {
           </View>
         </SafeAreaView>
       </>
-    );
+    )
   }
 
   if (!permission) {
@@ -422,7 +421,7 @@ export default function NewEntryScreen() {
       <View className="flex-1 items-center justify-center bg-canvas">
         <ActivityIndicator color={theme.accent} />
       </View>
-    );
+    )
   }
 
   if (!permission.granted) {
@@ -442,7 +441,7 @@ export default function NewEntryScreen() {
           </View>
         </SafeAreaView>
       </>
-    );
+    )
   }
 
   return (
@@ -551,5 +550,5 @@ export default function NewEntryScreen() {
         </View>
       </View>
     </>
-  );
+  )
 }

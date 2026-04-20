@@ -1,1 +1,1 @@
-export { useEntries } from "@/contexts/EntriesContext";
+export { useEntries } from "@/contexts/EntriesContext"

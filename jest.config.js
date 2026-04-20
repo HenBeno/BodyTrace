@@ -7,4 +7,4 @@ module.exports = {
     "<rootDir>/stitch_bodytrace_private_fitness_journal/",
   ],
   modulePathIgnorePatterns: ["<rootDir>/dist/", "<rootDir>/dist-web/"],
-};
+}

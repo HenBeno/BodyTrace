@@ -130,32 +130,32 @@ bodytrace/
 ```typescript
 // types/index.ts
 interface Entry {
-  id: string;
-  createdAt: Date;
+  id: string
+  createdAt: Date
   photos: {
-    front: string; // encrypted file path
-    side: string;
-    back: string;
-  };
+    front: string // encrypted file path
+    side: string
+    back: string
+  }
   measurements: {
-    neck?: number;
-    chest?: number;
-    waist?: number;
-    hips?: number;
-    leftArm?: number;
-    rightArm?: number;
-    leftThigh?: number;
-    rightThigh?: number;
-    weight?: number;
-  };
-  notes?: string;
+    neck?: number
+    chest?: number
+    waist?: number
+    hips?: number
+    leftArm?: number
+    rightArm?: number
+    leftThigh?: number
+    rightThigh?: number
+    weight?: number
+  }
+  notes?: string
 }
 
 interface Settings {
-  frequency: "weekly" | "monthly";
-  reminderEnabled: boolean;
-  reminderDay: number;
-  biometricEnabled: boolean;
+  frequency: "weekly" | "monthly"
+  reminderEnabled: boolean
+  reminderDay: number
+  biometricEnabled: boolean
 }
 ```
 

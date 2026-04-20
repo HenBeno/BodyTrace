@@ -16,4 +16,13 @@ export const theme = {
   borderSubtle: "rgba(255,255,255,0.08)",
   borderStrong: "rgba(255,255,255,0.14)",
   scrim: "rgba(0,0,0,0.72)",
-} as const;
+} as const
+
+/** Layout rhythm (px) — use in new code alongside NativeWind where helpful. */
+export const space = {
+  xs: 4,
+  sm: 8,
+  md: 16,
+  lg: 24,
+  xl: 32,
+} as const

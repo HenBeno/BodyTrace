@@ -1,87 +1,87 @@
-import * as Haptics from "expo-haptics";
-import React, { useCallback, useState } from "react";
+import * as Haptics from "expo-haptics"
+import React, { useCallback, useState } from "react"
 import {
-  LayoutChangeEvent,
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
+    LayoutChangeEvent,
+    Platform,
+    StyleSheet,
+    Text,
+    View,
+} from "react-native"
+import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import Animated, {
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from "react-native-reanimated";
+    runOnJS,
+    useAnimatedStyle,
+    useSharedValue,
+    withSpring,
+} from "react-native-reanimated"
 
-import { ResolvedExpoImage } from "@/components/media/ResolvedExpoImage";
-import { theme } from "@/utils/theme";
+import { ResolvedExpoImage } from "@/components/media/ResolvedExpoImage"
+import { theme } from "@/utils/theme"
 
 export interface SliderOverlayProps {
   /** Shown on the left / clipped region (e.g. older). */
-  beforeUri: string;
+  beforeUri: string
   /** Full frame (e.g. newer). */
-  afterUri: string;
+  afterUri: string
 }
 
 function triggerHaptic() {
   if (Platform.OS === "ios") {
-    Haptics.selectionAsync().catch(() => {});
+    Haptics.selectionAsync().catch(() => {})
   }
 }
 
 export function SliderOverlay({ beforeUri, afterUri }: SliderOverlayProps) {
-  const [trackW, setTrackW] = useState(280);
-  const layoutWidth = useSharedValue(280);
-  const split = useSharedValue(0.5);
-  const startSplit = useSharedValue(0.5);
+  const [trackW, setTrackW] = useState(280)
+  const layoutWidth = useSharedValue(280)
+  const split = useSharedValue(0.5)
+  const startSplit = useSharedValue(0.5)
 
   const onLayout = useCallback(
     (e: LayoutChangeEvent) => {
-      const w = e.nativeEvent.layout.width;
+      const w = e.nativeEvent.layout.width
       if (w > 0) {
-        setTrackW(w);
-        layoutWidth.value = w;
+        setTrackW(w)
+        layoutWidth.value = w
       }
     },
     [layoutWidth],
-  );
+  )
 
   /** Prefer vertical scroll on the parent Compare screen; only claim clearly horizontal drags. */
   const pan = Gesture.Pan()
     .activeOffsetX([-18, 18])
     .failOffsetY([-14, 14])
     .onBegin(() => {
-      startSplit.value = split.value;
+      startSplit.value = split.value
     })
     .onUpdate((e) => {
-      const w = Math.max(1, layoutWidth.value);
+      const w = Math.max(1, layoutWidth.value)
       split.value = Math.max(
         0.05,
         Math.min(0.95, startSplit.value + e.translationX / w),
-      );
+      )
     })
     .onEnd(() => {
       split.value = withSpring(split.value, {
         damping: 18,
         stiffness: 220,
         mass: 0.35,
-      });
-      runOnJS(triggerHaptic)();
-    });
+      })
+      runOnJS(triggerHaptic)()
+    })
 
   const clipStyle = useAnimatedStyle(() => {
-    return { width: layoutWidth.value * split.value };
-  });
+    return { width: layoutWidth.value * split.value }
+  })
 
   const dividerStyle = useAnimatedStyle(() => ({
     left: layoutWidth.value * split.value - 1,
-  }));
+  }))
 
   const knobStyle = useAnimatedStyle(() => ({
     left: layoutWidth.value * split.value - 22,
-  }));
+  }))
 
   return (
     <GestureDetector gesture={pan}>
@@ -178,5 +178,5 @@ export function SliderOverlay({ beforeUri, afterUri }: SliderOverlayProps) {
         </Animated.View>
       </View>
     </GestureDetector>
-  );
+  )
 }
