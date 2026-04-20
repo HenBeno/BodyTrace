@@ -1,0 +1,24 @@
+---
+description: BodyTrace uses vendored Callstack agent-skills locally — read SKILL.md then references/
+alwaysApply: true
+---
+
+# Agent skills (local)
+
+Skills follow the [agentskills.io](https://agentskills.io/specification) layout. Read the relevant **`SKILL.md` first**, then follow links into `references/`.
+
+## Local entry points
+
+Paths are relative to the repo root:
+
+- [react-native-best-practices/SKILL.md](.cursor/skills/agent-skills/skills/react-native-best-practices/SKILL.md) — RN performance (FPS, lists, native, bundle)
+- [github/SKILL.md](.cursor/skills/agent-skills/skills/github/SKILL.md) — PRs, review, branching
+- [github-actions/SKILL.md](.cursor/skills/agent-skills/skills/github-actions/SKILL.md) — Actions, simulators, artifacts
+- [upgrading-react-native/SKILL.md](.cursor/skills/agent-skills/skills/upgrading-react-native/SKILL.md) — RN / Expo upgrades
+- [react-native-brownfield-migration/SKILL.md](.cursor/skills/agent-skills/skills/react-native-brownfield-migration/SKILL.md) — brownfield adoption
+
+## Workflow
+
+Follow **measure → optimize → re-measure**. Prefer profiler evidence over speculative optimizations.
+
+See [AGENTS.md](AGENTS.md) for app stack and the same routing table.

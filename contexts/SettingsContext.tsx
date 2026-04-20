@@ -1,8 +1,16 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
-import type { AppSettings } from '@/types';
-import { loadAppSettings, saveAppSettings } from '@/services/database';
-import { syncRemindersWithSettings } from '@/services/reminders';
+import type { AppSettings } from "@/types";
+import { loadAppSettings, saveAppSettings } from "@/services/database";
+import { syncRemindersWithSettings } from "@/services/reminders";
 
 export interface SettingsContextValue {
   settings: AppSettings;
@@ -10,11 +18,13 @@ export interface SettingsContextValue {
   updateSettings: (partial: Partial<AppSettings>) => Promise<void>;
 }
 
-const SettingsContext = createContext<SettingsContextValue | undefined>(undefined);
+const SettingsContext = createContext<SettingsContextValue | undefined>(
+  undefined,
+);
 
 const DEFAULT_SETTINGS: AppSettings = {
   reminderEnabled: false,
-  reminderMode: 'weeklyDays',
+  reminderMode: "weeklyDays",
   reminderTime: { hour: 9, minute: 0 },
   weeklyDays: [1],
   monthlyDate: 1,
@@ -87,13 +97,17 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     [settings, ready, updateSettings],
   );
 
-  return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>;
+  return (
+    <SettingsContext.Provider value={value}>
+      {children}
+    </SettingsContext.Provider>
+  );
 }
 
 export function useSettings() {
   const ctx = useContext(SettingsContext);
   if (!ctx) {
-    throw new Error('useSettings must be used within SettingsProvider');
+    throw new Error("useSettings must be used within SettingsProvider");
   }
   return ctx;
 }

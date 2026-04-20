@@ -1,7 +1,7 @@
-import React from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import React from "react";
+import { Image, StyleSheet, View } from "react-native";
 
-import { useResolvedPhotoUri } from '@/hooks/useResolvedPhotoUri';
+import { useResolvedPhotoUri } from "@/hooks/useResolvedPhotoUri";
 
 export interface GhostOverlayProps {
   /** Local file URI or remote URL of the reference photo */

@@ -1,11 +1,11 @@
-import Constants, { ExecutionEnvironment } from 'expo-constants';
-import * as Device from 'expo-device';
-import { Platform } from 'react-native';
+import Constants, { ExecutionEnvironment } from "expo-constants";
+import * as Device from "expo-device";
+import { Platform } from "react-native";
 
-import type { AppSettings } from '@/types';
+import type { AppSettings } from "@/types";
 
-const ANDROID_CHANNEL = 'bodytrace-reminders';
-const REMINDER_ID_PREFIX = 'bodytrace-reminder-';
+const ANDROID_CHANNEL = "bodytrace-reminders";
+const REMINDER_ID_PREFIX = "bodytrace-reminder-";
 
 /** In Expo Go, importing `expo-notifications` throws on Android (SDK 53+). Use a dev build for real reminders. */
 function shouldSkipNotificationsModule(): boolean {
@@ -15,7 +15,7 @@ function shouldSkipNotificationsModule(): boolean {
 let notificationHandlerRegistered = false;
 
 async function ensureNotificationHandler(
-  Notifications: typeof import('expo-notifications'),
+  Notifications: typeof import("expo-notifications"),
 ): Promise<void> {
   if (notificationHandlerRegistered) return;
   Notifications.setNotificationHandler({
@@ -31,11 +31,11 @@ async function ensureNotificationHandler(
 }
 
 async function ensureAndroidChannel(
-  Notifications: typeof import('expo-notifications'),
+  Notifications: typeof import("expo-notifications"),
 ): Promise<void> {
-  if (Platform.OS !== 'android') return;
+  if (Platform.OS !== "android") return;
   await Notifications.setNotificationChannelAsync(ANDROID_CHANNEL, {
-    name: 'Check-in reminders',
+    name: "Check-in reminders",
     importance: Notifications.AndroidImportance.DEFAULT,
   });
 }
@@ -45,8 +45,11 @@ function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, Math.round(value)));
 }
 
-function normalizeWeeklyDays(days: number[]): number[] {
-  const unique = [...new Set(days.map((day) => clamp(day, 0, 6)))].sort((a, b) => a - b);
+/** Exported for unit tests; behavior is part of reminder scheduling. */
+export function normalizeWeeklyDays(days: number[]): number[] {
+  const unique = [...new Set(days.map((day) => clamp(day, 0, 6)))].sort(
+    (a, b) => a - b,
+  );
   return unique.length > 0 ? unique : [1];
 }
 
@@ -64,7 +67,10 @@ function normalizeSettings(settings: AppSettings) {
   };
 }
 
-function countPerDayTimes(countPerDay: number): { hour: number; minute: number }[] {
+/** Exported for unit tests; spreads reminders between 08:00 and 22:00. */
+export function countPerDayTimes(
+  countPerDay: number,
+): { hour: number; minute: number }[] {
   const startMinute = 8 * 60;
   const endMinute = 22 * 60;
   if (countPerDay <= 1) {
@@ -81,24 +87,30 @@ function countPerDayTimes(countPerDay: number): { hour: number; minute: number }
 }
 
 async function cancelExistingReminderSchedules(
-  Notifications: typeof import('expo-notifications'),
+  Notifications: typeof import("expo-notifications"),
 ): Promise<void> {
   const all = await Notifications.getAllScheduledNotificationsAsync();
   const reminderIds = all
     .map((item) => item.identifier)
-    .filter((id) => id === 'bodytrace-reminder' || id.startsWith(REMINDER_ID_PREFIX));
-  await Promise.all(reminderIds.map((id) => Notifications.cancelScheduledNotificationAsync(id)));
+    .filter(
+      (id) => id === "bodytrace-reminder" || id.startsWith(REMINDER_ID_PREFIX),
+    );
+  await Promise.all(
+    reminderIds.map((id) => Notifications.cancelScheduledNotificationAsync(id)),
+  );
 }
 
 /**
  * Cancels existing local reminders and schedules new ones from settings.
  * No-ops in Expo Go (importing the native module is unsupported there on Android).
  */
-export async function syncRemindersWithSettings(settings: AppSettings): Promise<void> {
-  if (Platform.OS === 'web') return;
+export async function syncRemindersWithSettings(
+  settings: AppSettings,
+): Promise<void> {
+  if (Platform.OS === "web") return;
   if (shouldSkipNotificationsModule()) return;
 
-  const Notifications = await import('expo-notifications');
+  const Notifications = await import("expo-notifications");
   await ensureNotificationHandler(Notifications);
   await cancelExistingReminderSchedules(Notifications);
 
@@ -107,22 +119,22 @@ export async function syncRemindersWithSettings(settings: AppSettings): Promise<
 
   const perm = await Notifications.getPermissionsAsync();
   let status = perm.status;
-  if (status !== 'granted') {
+  if (status !== "granted") {
     const req = await Notifications.requestPermissionsAsync();
     status = req.status;
   }
-  if (status !== 'granted') return;
+  if (status !== "granted") return;
 
   await ensureAndroidChannel(Notifications);
   const normalized = normalizeSettings(settings);
-  const channelId = Platform.OS === 'android' ? ANDROID_CHANNEL : undefined;
+  const channelId = Platform.OS === "android" ? ANDROID_CHANNEL : undefined;
   const reminderContent = {
-    title: 'BodyTrace reminder',
-    body: 'Quick check-in: log a photo update to keep your progress streak going.',
+    title: "BodyTrace reminder",
+    body: "Quick check-in: log a photo update to keep your progress streak going.",
   };
   const schedule = Notifications.scheduleNotificationAsync;
 
-  if (normalized.reminderMode === 'everyXHours') {
+  if (normalized.reminderMode === "everyXHours") {
     await schedule({
       identifier: `${REMINDER_ID_PREFIX}every-x-hours`,
       content: reminderContent,
@@ -136,7 +148,7 @@ export async function syncRemindersWithSettings(settings: AppSettings): Promise<
     return;
   }
 
-  if (normalized.reminderMode === 'weeklyDays') {
+  if (normalized.reminderMode === "weeklyDays") {
     await Promise.all(
       normalized.weeklyDays.map((day) =>
         schedule({
@@ -155,12 +167,12 @@ export async function syncRemindersWithSettings(settings: AppSettings): Promise<
     return;
   }
 
-  if (normalized.reminderMode === 'monthlyDate') {
+  if (normalized.reminderMode === "monthlyDate") {
     await schedule({
       identifier: `${REMINDER_ID_PREFIX}monthly`,
       content: {
-        title: 'BodyTrace monthly reminder',
-        body: 'Monthly checkpoint: update photos and measurements.',
+        title: "BodyTrace monthly reminder",
+        body: "Monthly checkpoint: update photos and measurements.",
       },
       trigger: {
         type: Notifications.SchedulableTriggerInputTypes.MONTHLY,
@@ -173,7 +185,7 @@ export async function syncRemindersWithSettings(settings: AppSettings): Promise<
     return;
   }
 
-  if (normalized.reminderMode === 'countPerDay') {
+  if (normalized.reminderMode === "countPerDay") {
     await Promise.all(
       countPerDayTimes(normalized.countPerDay).map((time, index) =>
         schedule({

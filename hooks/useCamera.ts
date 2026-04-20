@@ -1,5 +1,5 @@
-import { useCameraPermissions } from 'expo-camera';
-import { useCallback, useState } from 'react';
+import { useCameraPermissions } from "expo-camera";
+import { useCallback, useState } from "react";
 
 export function useCameraPermissionGate() {
   const [permission, requestPermission] = useCameraPermissions();

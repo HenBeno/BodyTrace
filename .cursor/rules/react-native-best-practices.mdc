@@ -1,0 +1,15 @@
+---
+description: React Native performance — route to local react-native-best-practices SKILL.md; profile first
+globs: "**/*.{tsx,ts,jsx,js}"
+alwaysApply: false
+---
+
+# React Native performance
+
+When editing matched files for **React Native or Expo** performance work:
+
+1. Open [.cursor/skills/agent-skills/skills/react-native-best-practices/SKILL.md](.cursor/skills/agent-skills/skills/react-native-best-practices/SKILL.md) for problem → reference routing.
+2. **Profile before** suggesting memoization hooks or micro-optimizations.
+3. Prefer concrete references under `.cursor/skills/agent-skills/skills/react-native-best-practices/references/` (lists, bundle, native, JS) over generic advice.
+
+If those paths are missing, restore the `agent-skills` tree under `.cursor/skills/agent-skills/` so links resolve.

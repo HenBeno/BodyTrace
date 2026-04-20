@@ -5,6 +5,10 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "jest",
+    "test:ci": "jest --ci --coverage=false",
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
@@ -57,10 +61,15 @@
     "tweetnacl-util": "^0.15.1"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/react": "~19.1.0",
     "eslint": "^9.39.4",
     "eslint-config-expo": "^55.0.0",
     "globals": "^17.5.0",
+    "jest": "^29.7.0",
+    "jest-expo": "^55.0.16",
+    "prettier": "^3.8.3",
+    "prettier-plugin-tailwindcss": "^0.7.2",
     "react-test-renderer": "19.1.0",
     "typescript": "~5.9.2"
   },

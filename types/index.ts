@@ -1,7 +1,7 @@
-export type PhotoAngle = 'front' | 'side' | 'back';
+export type PhotoAngle = "front" | "side" | "back";
 
-export type CircumferenceUnit = 'cm' | 'inch';
-export type WeightUnit = 'kg' | 'lb';
+export type CircumferenceUnit = "cm" | "inch";
+export type WeightUnit = "kg" | "lb";
 
 export type CircumferenceMeasure = { value: number; unit: CircumferenceUnit };
 export type WeightMeasure = { value: number; unit: WeightUnit };
@@ -23,7 +23,12 @@ export interface Entry {
   notes?: string;
 }
 
-export type ReminderMode = 'daily' | 'everyXHours' | 'weeklyDays' | 'monthlyDate' | 'countPerDay';
+export type ReminderMode =
+  | "daily"
+  | "everyXHours"
+  | "weeklyDays"
+  | "monthlyDate"
+  | "countPerDay";
 
 export interface ReminderTime {
   hour: number;

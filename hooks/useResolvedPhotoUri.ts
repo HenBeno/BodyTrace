@@ -1,9 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-import { isEncryptedPhotoUri, resolvePhotoUriForDisplay } from '@/services/encryption';
+import {
+  isEncryptedPhotoUri,
+  resolvePhotoUriForDisplay,
+} from "@/services/encryption";
 
 /** Resolves `file://…enc` to a temporary JPEG in cache; passes through http(s) and plain JPEG URIs. */
-export function useResolvedPhotoUri(uri: string | null | undefined): string | null {
+export function useResolvedPhotoUri(
+  uri: string | null | undefined,
+): string | null {
   const [out, setOut] = useState<string | null>(() => {
     if (!uri) return null;
     return isEncryptedPhotoUri(uri) ? null : uri;

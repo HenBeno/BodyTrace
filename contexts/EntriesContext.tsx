@@ -1,9 +1,24 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { Platform } from 'react-native';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { Platform } from "react-native";
 
-import type { Entry, PhotoAngle } from '@/types';
-import { deleteEntryById, ensureInitialized, insertEntry, loadAllEntries } from '@/services/database';
-import { deleteEntryMediaFolder, persistEntryPhotos } from '@/services/mediaStore';
+import type { Entry, PhotoAngle } from "@/types";
+import {
+  deleteEntryById,
+  ensureInitialized,
+  insertEntry,
+  loadAllEntries,
+} from "@/services/database";
+import {
+  deleteEntryMediaFolder,
+  persistEntryPhotos,
+} from "@/services/mediaStore";
 
 function sortByDateDesc(a: Entry, b: Entry) {
   return b.createdAt.getTime() - a.createdAt.getTime();
@@ -20,10 +35,15 @@ export interface EntriesContextValue {
   addEntry: (entry: Entry) => Promise<void>;
   removeEntry: (id: string) => Promise<void>;
   getOldestEntry: () => Entry | undefined;
-  getGhostUriForAngle: (angle: PhotoAngle, referenceEntryId?: string | null) => string | null;
+  getGhostUriForAngle: (
+    angle: PhotoAngle,
+    referenceEntryId?: string | null,
+  ) => string | null;
 }
 
-const EntriesContext = createContext<EntriesContextValue | undefined>(undefined);
+const EntriesContext = createContext<EntriesContextValue | undefined>(
+  undefined,
+);
 
 export function EntriesProvider({ children }: { children: React.ReactNode }) {
   const [entries, setEntries] = useState<Entry[]>([]);
@@ -54,7 +74,7 @@ export function EntriesProvider({ children }: { children: React.ReactNode }) {
   const addEntry = useCallback(async (entry: Entry) => {
     const photos = await persistEntryPhotos(entry.id, entry.photos);
     const saved: Entry = { ...entry, photos };
-    if (Platform.OS === 'web') {
+    if (Platform.OS === "web") {
       setEntries((prev) => [saved, ...prev].sort(sortByDateDesc));
       return;
     }
@@ -63,7 +83,7 @@ export function EntriesProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const removeEntry = useCallback(async (id: string) => {
-    if (Platform.OS === 'web') {
+    if (Platform.OS === "web") {
       setEntries((prev) => prev.filter((e) => e.id !== id));
       return;
     }
@@ -102,16 +122,25 @@ export function EntriesProvider({ children }: { children: React.ReactNode }) {
       getOldestEntry,
       getGhostUriForAngle,
     }),
-    [entries, ready, addEntry, removeEntry, getOldestEntry, getGhostUriForAngle],
+    [
+      entries,
+      ready,
+      addEntry,
+      removeEntry,
+      getOldestEntry,
+      getGhostUriForAngle,
+    ],
   );
 
-  return <EntriesContext.Provider value={value}>{children}</EntriesContext.Provider>;
+  return (
+    <EntriesContext.Provider value={value}>{children}</EntriesContext.Provider>
+  );
 }
 
 export function useEntries() {
   const ctx = useContext(EntriesContext);
   if (!ctx) {
-    throw new Error('useEntries must be used within EntriesProvider');
+    throw new Error("useEntries must be used within EntriesProvider");
   }
   return ctx;
 }

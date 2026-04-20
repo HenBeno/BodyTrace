@@ -63,18 +63,18 @@ flowchart TB
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| Framework | React Native + Expo SDK 52 |
-| Language | TypeScript |
-| Navigation | Expo Router (file-based) |
-| Styling | NativeWind v4 (Tailwind CSS) |
-| Icons | Lucide React Native |
-| State | React Context + useReducer |
-| Database | expo-sqlite (encrypted) |
-| Camera | expo-camera |
-| Auth | expo-local-authentication |
-| File Storage | expo-file-system |
+| Layer        | Technology                   |
+| ------------ | ---------------------------- |
+| Framework    | React Native + Expo SDK 52   |
+| Language     | TypeScript                   |
+| Navigation   | Expo Router (file-based)     |
+| Styling      | NativeWind v4 (Tailwind CSS) |
+| Icons        | Lucide React Native          |
+| State        | React Context + useReducer   |
+| Database     | expo-sqlite (encrypted)      |
+| Camera       | expo-camera                  |
+| Auth         | expo-local-authentication    |
+| File Storage | expo-file-system             |
 
 ## Project Structure
 
@@ -133,7 +133,7 @@ interface Entry {
   id: string;
   createdAt: Date;
   photos: {
-    front: string;    // encrypted file path
+    front: string; // encrypted file path
     side: string;
     back: string;
   };
@@ -152,7 +152,7 @@ interface Entry {
 }
 
 interface Settings {
-  frequency: 'weekly' | 'monthly';
+  frequency: "weekly" | "monthly";
   reminderEnabled: boolean;
   reminderDay: number;
   biometricEnabled: boolean;
@@ -181,6 +181,7 @@ flowchart LR
 ```
 
 **Implementation approach:**
+
 1. Use `expo-camera` for the live feed as the base layer
 2. Overlay an `<Image>` component with `position: absolute` and adjustable opacity
 3. Add alignment guides (grid lines, silhouette outline)
@@ -191,7 +192,7 @@ flowchart LR
 // Simplified overlay structure
 <View style={{ flex: 1 }}>
   <CameraView style={StyleSheet.absoluteFill} />
-  
+
   {ghostImage && (
     <Image
       source={{ uri: ghostImage }}
@@ -199,7 +200,7 @@ flowchart LR
       resizeMode="cover"
     />
   )}
-  
+
   <AlignmentGuide />
   <OpacitySlider value={ghostOpacity} onChange={setGhostOpacity} />
 </View>
@@ -234,33 +235,39 @@ CREATE TABLE settings (
 ## Implementation Order
 
 ### Phase 1: Project Setup
+
 - Initialize Expo project with TypeScript
 - Configure NativeWind
 - Set up Expo Router navigation structure
 - Create base UI components
 
 ### Phase 2: Home Screen / Timeline
+
 - Implement `EntriesContext` with mock data
 - Build `TimelineList` and `TimelineEntry` components
 - Create the Home screen layout
 
 ### Phase 3: Camera Overlay (Core Feature)
+
 - Set up `expo-camera` with permissions
 - Implement `GhostOverlay` component
 - Add `AlignmentGuide` and `OpacitySlider`
 - Build the full camera capture flow
 
 ### Phase 4: Entry Workflow
+
 - Create measurement input form
 - Implement photo capture sequence (Front → Side → Back)
 - Wire up entry creation and storage
 
 ### Phase 5: Storage and Security
+
 - Set up SQLite database
 - Implement file encryption for photos
 - Add biometric authentication gate
 
 ### Phase 6: Comparison Tool
+
 - Build side-by-side comparison view
 - Implement interactive slider overlay
 - Create export functionality
