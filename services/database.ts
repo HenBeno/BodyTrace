@@ -1,6 +1,6 @@
 import * as SQLite from 'expo-sqlite';
 
-import type { AppSettings, CircumferenceMeasure, Entry, PhotoAngle, WeightMeasure } from '@/types';
+import type { AppSettings, CircumferenceMeasure, Entry, PhotoAngle, ReminderMode, WeightMeasure } from '@/types';
 
 import { deleteEntryMediaFolder } from '@/services/mediaStore';
 
@@ -192,11 +192,39 @@ export async function deleteEntryById(id: string): Promise<void> {
 }
 
 const DEFAULT_SETTINGS: AppSettings = {
-  frequency: 'weekly',
   reminderEnabled: false,
-  reminderDay: 0,
+  reminderMode: 'weeklyDays',
+  reminderTime: { hour: 9, minute: 0 },
+  weeklyDays: [1],
+  monthlyDate: 1,
+  everyXHours: 4,
+  countPerDay: 2,
   biometricEnabled: false,
 };
+
+function clamp(value: number, min: number, max: number): number {
+  if (!Number.isFinite(value)) return min;
+  return Math.min(max, Math.max(min, Math.round(value)));
+}
+
+function parseReminderMode(raw: string | undefined): ReminderMode | null {
+  if (
+    raw === 'daily' ||
+    raw === 'everyXHours' ||
+    raw === 'weeklyDays' ||
+    raw === 'monthlyDate' ||
+    raw === 'countPerDay'
+  ) {
+    return raw;
+  }
+  return null;
+}
+
+function parseWeeklyDays(raw: string | undefined): number[] {
+  if (!raw) return [...DEFAULT_SETTINGS.weeklyDays];
+  const days = [...new Set(raw.split(',').map((part) => clamp(Number(part), 0, 6)))].sort((a, b) => a - b);
+  return days.length > 0 ? days : [...DEFAULT_SETTINGS.weeklyDays];
+}
 
 export async function loadAppSettings(): Promise<AppSettings> {
   await ensureInitialized();
@@ -204,10 +232,29 @@ export async function loadAppSettings(): Promise<AppSettings> {
   const rows = await db.getAllAsync<{ key: string; value: string }>('SELECT key, value FROM app_settings', []);
   if (rows.length === 0) return { ...DEFAULT_SETTINGS };
   const map = Object.fromEntries(rows.map((r) => [r.key, r.value]));
+  const legacyFrequency = map.frequency === 'monthly' ? 'monthly' : 'weekly';
+  const legacyReminderDay =
+    legacyFrequency === 'monthly'
+      ? clamp(Number(map.reminderDay ?? DEFAULT_SETTINGS.monthlyDate), 1, 28)
+      : clamp(Number(map.reminderDay ?? DEFAULT_SETTINGS.weeklyDays[0]), 0, 6);
+  const reminderMode = parseReminderMode(map.reminderMode) ?? (legacyFrequency === 'monthly' ? 'monthlyDate' : 'weeklyDays');
   return {
-    frequency: map.frequency === 'monthly' ? 'monthly' : 'weekly',
     reminderEnabled: map.reminderEnabled === '1',
-    reminderDay: Number(map.reminderDay ?? 0) || 0,
+    reminderMode,
+    reminderTime: {
+      hour: clamp(Number(map.reminderHour ?? DEFAULT_SETTINGS.reminderTime.hour), 0, 23),
+      minute: clamp(Number(map.reminderMinute ?? DEFAULT_SETTINGS.reminderTime.minute), 0, 59),
+    },
+    weeklyDays: map.weeklyDays
+      ? parseWeeklyDays(map.weeklyDays)
+      : [legacyFrequency === 'weekly' ? legacyReminderDay : DEFAULT_SETTINGS.weeklyDays[0]],
+    monthlyDate: clamp(
+      Number(map.monthlyDate ?? (legacyFrequency === 'monthly' ? legacyReminderDay : DEFAULT_SETTINGS.monthlyDate)),
+      1,
+      28,
+    ),
+    everyXHours: clamp(Number(map.everyXHours ?? DEFAULT_SETTINGS.everyXHours), 1, 23),
+    countPerDay: clamp(Number(map.countPerDay ?? DEFAULT_SETTINGS.countPerDay), 1, 6),
     biometricEnabled: map.biometricEnabled === '1',
   };
 }
@@ -219,8 +266,26 @@ async function upsertSetting(db: SQLite.SQLiteDatabase, key: string, value: stri
 export async function saveAppSettings(settings: AppSettings): Promise<void> {
   await ensureInitialized();
   const db = await getDb();
-  await upsertSetting(db, 'frequency', settings.frequency);
   await upsertSetting(db, 'reminderEnabled', settings.reminderEnabled ? '1' : '0');
-  await upsertSetting(db, 'reminderDay', String(settings.reminderDay));
+  await upsertSetting(db, 'reminderMode', settings.reminderMode);
+  await upsertSetting(db, 'reminderHour', String(clamp(settings.reminderTime.hour, 0, 23)));
+  await upsertSetting(db, 'reminderMinute', String(clamp(settings.reminderTime.minute, 0, 59)));
+  const weeklyDays = [...new Set(settings.weeklyDays.map((day) => clamp(day, 0, 6)))].sort((a, b) => a - b);
+  await upsertSetting(
+    db,
+    'weeklyDays',
+    (weeklyDays.length > 0 ? weeklyDays : DEFAULT_SETTINGS.weeklyDays).map(String).join(','),
+  );
+  await upsertSetting(db, 'monthlyDate', String(clamp(settings.monthlyDate, 1, 28)));
+  await upsertSetting(db, 'everyXHours', String(clamp(settings.everyXHours, 1, 23)));
+  await upsertSetting(db, 'countPerDay', String(clamp(settings.countPerDay, 1, 6)));
+  // Keep legacy keys for forward compatibility with older app builds.
+  const legacyFrequency = settings.reminderMode === 'monthlyDate' ? 'monthly' : 'weekly';
+  const legacyReminderDay =
+    legacyFrequency === 'monthly'
+      ? clamp(settings.monthlyDate, 1, 28)
+      : clamp((weeklyDays.length > 0 ? weeklyDays[0] : DEFAULT_SETTINGS.weeklyDays[0]) ?? 1, 0, 6);
+  await upsertSetting(db, 'frequency', legacyFrequency);
+  await upsertSetting(db, 'reminderDay', String(legacyReminderDay));
   await upsertSetting(db, 'biometricEnabled', settings.biometricEnabled ? '1' : '0');
 }

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BodyTrace - Evolution Comparison</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#acc3ce",
+                        "primary-fixed": "#c7e7fa",
+                        "surface-container-highest": "#252626",
+                        "tertiary-container": "#9facf4",
+                        "secondary-dim": "#8ba1ac",
+                        "outline": "#767575",
+                        "surface": "#0e0e0e",
+                        "error-container": "#7f2927",
+                        "primary-dim": "#9ebdd0",
+                        "surface-container-low": "#131313",
+                        "tertiary": "#aebaff",
+                        "on-primary-fixed-variant": "#425f70",
+                        "on-primary-fixed": "#254352",
+                        "tertiary-fixed": "#9facf4",
+                        "on-background": "#e7e5e5",
+                        "primary-container": "#2c4a5a",
+                        "on-error-container": "#ff9993",
+                        "error": "#ee7d77",
+                        "on-tertiary": "#283575",
+                        "error-dim": "#bb5551",
+                        "surface-dim": "#0e0e0e",
+                        "on-tertiary-fixed-variant": "#263474",
+                        "surface-container": "#191a1a",
+                        "on-tertiary-container": "#1d2b6a",
+                        "primary-fixed-dim": "#bad9ec",
+                        "on-primary": "#254453",
+                        "secondary-fixed": "#cfe6f2",
+                        "surface-tint": "#accbde",
+                        "primary": "#accbde",
+                        "tertiary-dim": "#929fe6",
+                        "on-secondary-fixed-variant": "#495f69",
+                        "on-error": "#490106",
+                        "surface-variant": "#252626",
+                        "inverse-primary": "#456373",
+                        "background": "#0e0e0e",
+                        "surface-container-lowest": "#000000",
+                        "secondary": "#8ba1ac",
+                        "inverse-on-surface": "#565555",
+                        "inverse-surface": "#fcf9f8",
+                        "on-surface-variant": "#acabaa",
+                        "on-primary-container": "#b5d5e8",
+                        "on-tertiary-fixed": "#000f4f",
+                        "tertiary-fixed-dim": "#929fe6",
+                        "surface-bright": "#2b2c2c",
+                        "on-surface": "#e7e5e5",
+                        "secondary-container": "#293e48",
+                        "surface-container-high": "#1f2020",
+                        "on-secondary": "#0d232b",
+                        "on-secondary-fixed": "#2d424c",
+                        "secondary-fixed-dim": "#c1d8e4",
+                        "outline-variant": "#484848"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .comparison-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 4px;
+            height: 100vh;
+            background: #accbde;
+            cursor: col-resize;
+            box-shadow: 0 0 20px rgba(172, 203, 222, 0.4);
+        }
+        .comparison-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            width: 100%;
+            outline: none;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body min-h-screen selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="w-full sticky top-0 z-50 bg-[#0e0e0e] dark:bg-[#0e0e0e] flex items-center justify-between px-10 py-6 w-full">
+<div class="flex items-center gap-4">
+<button class="hover:opacity-80 transition-opacity duration-300 scale-95 active:duration-150 text-[#accbde] dark:text-[#accbde]">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-manrope font-black text-xl text-[#accbde] tracking-tighter">BodyTrace</h1>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden md:flex gap-8">
+<span class="font-inter text-[10px] uppercase tracking-[0.05em] font-medium text-gray-500 hover:text-[#accbde] transition-colors cursor-pointer">Timeline</span>
+<span class="font-inter text-[10px] uppercase tracking-[0.05em] font-bold text-[#accbde] transition-colors cursor-pointer">Compare</span>
+<span class="font-inter text-[10px] uppercase tracking-[0.05em] font-medium text-gray-500 hover:text-[#accbde] transition-colors cursor-pointer">Settings</span>
+</div>
+<button class="hover:opacity-80 transition-opacity duration-300 scale-95 active:duration-150 text-[#accbde] dark:text-[#accbde]">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-4 md:px-10 pb-32 pt-4">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+<div class="max-w-xl">
+<span class="font-inter text-[10px] uppercase tracking-[0.1em] text-primary mb-2 block">Evolution Analysis</span>
+<h2 class="font-headline font-bold text-4xl md:text-5xl tracking-tight text-on-surface leading-tight">Visual Correlation.</h2>
+</div>
+<!-- Angle Toggle -->
+<div class="flex bg-surface-container-low p-1 rounded-xl">
+<button class="px-6 py-2 rounded-lg font-label text-[11px] font-bold tracking-widest uppercase bg-primary-container text-on-primary-container transition-all">Front</button>
+<button class="px-6 py-2 rounded-lg font-label text-[11px] font-medium tracking-widest uppercase text-outline hover:text-on-surface transition-all">Side</button>
+<button class="px-6 py-2 rounded-lg font-label text-[11px] font-medium tracking-widest uppercase text-outline hover:text-on-surface transition-all">Back</button>
+</div>
+</div>
+<!-- Main Comparison Interface -->
+<div class="relative grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Comparison Canvas -->
+<div class="lg:col-span-9 space-y-6">
+<div class="relative aspect-[3/4] md:aspect-[16/9] w-full overflow-hidden rounded-xl bg-surface-container-lowest group shadow-2xl">
+<!-- Base Image (Left/Old) -->
+<div class="absolute inset-0 bg-cover bg-center" data-alt="professional body progress photograph front view male muscular definition neutral studio lighting charcoal background deep shadows" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCUEXzb9fG40mVEYLwNVM7bhjN17RXqZvApL8ewVD3RyhQkwykD5YHq3Cdhj32v7Fe07sl6dOE7U8ltOEMh1jfMQ1rTbpUafabCBRXkQEUiLBq7mvY0n8K0czrwqJ-Wza5_zuY957od540RwfgEavR8SLRtBrbQRb15HdO7R445z6IuLz4xbabSYyX4o51Hx9oM47V8tSJ_3OJ7VTnMiiswyckdm9uBu0kXizCzzPLkSRcNnHK1ogQd1XEN0TuFpL2J57A8TU1A3Xo')"></div>
+<!-- Top Image (Right/New) -->
+<div class="absolute inset-0 bg-cover bg-center overflow-hidden border-r-2 border-primary/20" data-alt="high contrast body progress photo updated physique front view dramatic lighting sculpted muscles minimalist fitness vault aesthetic" style="width: 50%; background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAC3_-fewq3-kMuFc5TM3V9V3nPURuatdGzYLNC78mMFvT7wH3zAsiTWZ_4CrbRdF_66YbYw-2x6qobnkRygFt6gD6YLEKbEZrfHDmzsHbKDdZYWj333PyyfpJxije2_2lVXbSaEE1LVE30G2aBdomZ6H_h-FJ6qIGbOU45VrinSr8VZ4FkYBa7UrPI_ziKFlF2Lzhg_wwW_RYc6LQCbsHzIpOEGpwtTTvgo1kX87LbETaasKqH0OljvmgH-geNthJlLBzivpv3Uk4'); transform: translateX(0);"></div>
+<!-- Floating Overlay Labels -->
+<div class="absolute top-8 left-8 z-10 pointer-events-none">
+<div class="bg-surface/60 backdrop-blur-md px-4 py-2 rounded-lg border border-outline-variant/10">
+<p class="font-label text-[10px] uppercase tracking-tighter text-outline mb-0.5">Initial Entry</p>
+<p class="font-headline font-bold text-primary">OCT 14, 2023</p>
+</div>
+</div>
+<div class="absolute top-8 right-8 z-10 pointer-events-none text-right">
+<div class="bg-surface/60 backdrop-blur-md px-4 py-2 rounded-lg border border-outline-variant/10">
+<p class="font-label text-[10px] uppercase tracking-tighter text-outline mb-0.5">Latest Entry</p>
+<p class="font-headline font-bold text-primary">FEB 28, 2024</p>
+</div>
+</div>
+<!-- Split Slider Control -->
+<input class="comparison-slider absolute inset-0 z-20 cursor-col-resize opacity-0 hover:opacity-100 transition-opacity" max="100" min="1" type="range" value="50"/>
+<!-- Center Handle Decorative -->
+<div class="absolute inset-y-0 left-1/2 -translate-x-1/2 w-0.5 bg-primary/40 pointer-events-none z-10 shadow-[0_0_15px_rgba(172,203,222,0.3)]">
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-sm" data-icon="unfold_more">unfold_more</span>
+</div>
+</div>
+</div>
+<!-- Secondary Comparison Metrics -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="p-6 rounded-xl bg-surface-container-low transition-all hover:bg-surface-container">
+<p class="font-label text-[10px] uppercase tracking-[0.1em] text-outline mb-1">Duration</p>
+<p class="font-headline font-bold text-xl text-on-surface">137 Days</p>
+</div>
+<div class="p-6 rounded-xl bg-surface-container-low transition-all hover:bg-surface-container">
+<p class="font-label text-[10px] uppercase tracking-[0.1em] text-outline mb-1">Net Delta</p>
+<p class="font-headline font-bold text-xl text-primary">-4.2% BF</p>
+</div>
+<div class="p-6 rounded-xl bg-surface-container-low transition-all hover:bg-surface-container">
+<p class="font-label text-[10px] uppercase tracking-[0.1em] text-outline mb-1">Consistency</p>
+<p class="font-headline font-bold text-xl text-on-surface">92%</p>
+</div>
+<div class="p-6 rounded-xl bg-surface-container-low transition-all hover:bg-surface-container border-l-2 border-primary/20">
+<p class="font-label text-[10px] uppercase tracking-[0.1em] text-primary mb-1">Vault Status</p>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="lock" style="font-variation-settings: 'FILL' 1;">lock</span>
+<p class="font-headline font-bold text-xl text-on-surface">Encrypted</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Date Selector Sidebar -->
+<div class="lg:col-span-3 space-y-8 h-full">
+<div>
+<h3 class="font-headline font-bold text-lg mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="calendar_month">calendar_month</span>
+                        Select Timeline
+                    </h3>
+<div class="space-y-4">
+<!-- Date Entry 1 -->
+<div class="p-4 rounded-xl bg-surface-container-highest border border-primary/30 cursor-pointer">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-primary/20 text-primary text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-widest">Base</span>
+<span class="material-symbols-outlined text-primary text-xs" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="font-headline font-bold text-on-surface">Oct 14, 2023</p>
+<p class="font-label text-[11px] text-outline">Weight: 184.2 lbs</p>
+</div>
+<!-- Spacer Node -->
+<div class="flex flex-col items-center py-2">
+<div class="w-0.5 h-8 bg-surface-container-high"></div>
+</div>
+<!-- Date Entry 2 -->
+<div class="p-4 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer border border-transparent">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-surface-container-high text-outline text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-widest">Checkpoint</span>
+</div>
+<p class="font-headline font-bold text-on-surface">Dec 22, 2023</p>
+<p class="font-label text-[11px] text-outline">Weight: 179.5 lbs</p>
+</div>
+<!-- Date Entry 3 -->
+<div class="p-4 rounded-xl bg-surface-container-highest border border-primary/30 cursor-pointer">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-primary text-on-primary text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-widest">Target</span>
+<span class="material-symbols-outlined text-primary text-xs" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="font-headline font-bold text-on-surface">Feb 28, 2024</p>
+<p class="font-label text-[11px] text-outline">Weight: 176.1 lbs</p>
+</div>
+</div>
+</div>
+<!-- Export Action -->
+<button class="w-full py-4 px-6 rounded-lg bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-bold text-sm tracking-tight flex items-center justify-center gap-2 shadow-lg shadow-primary/10 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-sm" data-icon="share">share</span>
+                    Export Comparison
+                </button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-6 pb-8 pt-4 bg-[#131313]/90 backdrop-blur-xl z-50 shadow-[0_-4px_32px_rgba(172,203,222,0.06)]">
+<a class="flex flex-col items-center justify-center text-gray-600 hover:text-[#accbde] transition-colors duration-300 scale-90 active:duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-inter text-[10px] uppercase tracking-[0.05em] font-medium mt-1">Timeline</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#accbde] font-bold scale-90 active:duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="compare_arrows" style="font-variation-settings: 'FILL' 1;">compare_arrows</span>
+<span class="font-inter text-[10px] uppercase tracking-[0.05em] mt-1">Compare</span>
+</a>
+<a class="flex flex-col items-center justify-center text-gray-600 hover:text-[#accbde] transition-colors duration-300 scale-90 active:duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-inter text-[10px] uppercase tracking-[0.05em] font-medium mt-1">Settings</span>
+</a>
+</nav>
+<!-- Floating Security Chip -->
+<div class="fixed bottom-32 right-10 hidden md:block">
+<div class="flex items-center gap-3 bg-tertiary-container/10 border border-tertiary/20 backdrop-blur-lg px-4 py-2 rounded-full">
+<div class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></div>
+<span class="font-label text-[10px] font-bold tracking-widest uppercase text-tertiary">Biometric Lock Active</span>
+</div>
+</div>
+</body></html>

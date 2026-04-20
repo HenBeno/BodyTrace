@@ -23,9 +23,20 @@ export interface Entry {
   notes?: string;
 }
 
+export type ReminderMode = 'daily' | 'everyXHours' | 'weeklyDays' | 'monthlyDate' | 'countPerDay';
+
+export interface ReminderTime {
+  hour: number;
+  minute: number;
+}
+
 export interface AppSettings {
-  frequency: 'weekly' | 'monthly';
   reminderEnabled: boolean;
-  reminderDay: number;
+  reminderMode: ReminderMode;
+  reminderTime: ReminderTime;
+  weeklyDays: number[];
+  monthlyDate: number;
+  everyXHours: number;
+  countPerDay: number;
   biometricEnabled: boolean;
 }

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BodyTrace - Timeline</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-container": "#acc3ce",
+                    "primary-fixed": "#c7e7fa",
+                    "surface-container-highest": "#252626",
+                    "tertiary-container": "#9facf4",
+                    "secondary-dim": "#8ba1ac",
+                    "outline": "#767575",
+                    "surface": "#0e0e0e",
+                    "error-container": "#7f2927",
+                    "primary-dim": "#9ebdd0",
+                    "surface-container-low": "#131313",
+                    "tertiary": "#aebaff",
+                    "on-primary-fixed-variant": "#425f70",
+                    "on-primary-fixed": "#254352",
+                    "tertiary-fixed": "#9facf4",
+                    "on-background": "#e7e5e5",
+                    "primary-container": "#2c4a5a",
+                    "on-error-container": "#ff9993",
+                    "error": "#ee7d77",
+                    "on-tertiary": "#283575",
+                    "error-dim": "#bb5551",
+                    "surface-dim": "#0e0e0e",
+                    "on-tertiary-fixed-variant": "#263474",
+                    "surface-container": "#191a1a",
+                    "on-tertiary-container": "#1d2b6a",
+                    "primary-fixed-dim": "#bad9ec",
+                    "on-primary": "#254453",
+                    "secondary-fixed": "#cfe6f2",
+                    "surface-tint": "#accbde",
+                    "primary": "#accbde",
+                    "tertiary-dim": "#929fe6",
+                    "on-secondary-fixed-variant": "#495f69",
+                    "on-error": "#490106",
+                    "surface-variant": "#252626",
+                    "inverse-primary": "#456373",
+                    "background": "#0e0e0e",
+                    "surface-container-lowest": "#000000",
+                    "secondary": "#8ba1ac",
+                    "inverse-on-surface": "#565555",
+                    "inverse-surface": "#fcf9f8",
+                    "on-surface-variant": "#acabaa",
+                    "on-primary-container": "#b5d5e8",
+                    "on-tertiary-fixed": "#000f4f",
+                    "tertiary-fixed-dim": "#929fe6",
+                    "surface-bright": "#2b2c2c",
+                    "on-surface": "#e7e5e5",
+                    "secondary-container": "#293e48",
+                    "surface-container-high": "#1f2020",
+                    "on-secondary": "#0d232b",
+                    "on-secondary-fixed": "#2d424c",
+                    "secondary-fixed-dim": "#c1d8e4",
+                    "outline-variant": "#484848"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tonal-shift-bg-surface-container-low {
+            background-color: #131313;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary/30 min-h-screen">
+<!-- TopAppBar -->
+<header class="w-full sticky top-0 z-50 bg-[#0e0e0e] dark:bg-[#0e0e0e] tonal-shift-bg-surface-container-low">
+<div class="flex items-center justify-between px-10 py-6 w-full">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#accbde] dark:text-[#accbde] cursor-pointer hover:opacity-80 transition-opacity duration-300 active:scale-95">arrow_back</span>
+<h1 class="font-manrope font-black text-xl text-[#accbde] tracking-tighter">BodyTrace</h1>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-[#accbde] font-manrope font-bold tracking-tight text-lg hover:opacity-80 transition-opacity duration-300" href="#">Timeline</a>
+<a class="text-gray-500 font-manrope font-bold tracking-tight text-lg hover:opacity-80 transition-opacity duration-300" href="#">Compare</a>
+<a class="text-gray-500 font-manrope font-bold tracking-tight text-lg hover:opacity-80 transition-opacity duration-300" href="#">Settings</a>
+</div>
+<span class="material-symbols-outlined text-[#accbde] dark:text-[#accbde] cursor-pointer hover:opacity-80 transition-opacity duration-300 active:scale-95">more_vert</span>
+</div>
+</header>
+<main class="max-w-5xl mx-auto px-6 md:px-10 pt-12 pb-32">
+<!-- Header Section -->
+<section class="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
+<div class="max-w-xl">
+<h2 class="font-headline font-extrabold text-5xl md:text-6xl tracking-tighter text-on-surface mb-4">Evolution</h2>
+<p class="text-secondary font-body text-lg leading-relaxed max-w-sm">A visual vault of your physical consistency. Secured and private.</p>
+</div>
+<!-- Primary Action Button -->
+<button class="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-xl font-headline font-bold transition-all duration-300 hover:scale-[1.02] active:scale-95 shadow-xl shadow-primary/10">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+<span>New Entry</span>
+</button>
+</section>
+<!-- Timeline Feed -->
+<div class="space-y-24 relative">
+<!-- Timeline Connective Trace -->
+<div class="absolute left-[1.125rem] top-8 bottom-8 w-[1px] bg-outline-variant/10 hidden md:block"></div>
+<!-- Entry 1 -->
+<article class="relative md:pl-16">
+<!-- Timeline Node -->
+<div class="hidden md:block absolute left-4 top-2 w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(172,203,222,0.4)]"></div>
+<header class="flex flex-wrap items-baseline gap-x-6 mb-8">
+<h3 class="font-headline font-extrabold text-3xl text-on-surface">October 24</h3>
+<span class="text-secondary font-label uppercase tracking-widest text-xs">82.4 kg</span>
+<span class="px-3 py-1 rounded-full bg-tertiary-container/10 text-tertiary-container text-[10px] font-bold uppercase tracking-wider">Encrypted</span>
+</header>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="aspect-[3/4] overflow-hidden rounded-xl bg-surface-container-low border border-outline-variant/10 group cursor-pointer">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100" data-alt="dramatic athletic male silhouette front profile in low-key lighting with deep shadows and soft rim light on obsidian background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAO3MF5e1A2WRYT4_GKhl51RkJ73Ly2Wn7WIpw2CCPgwgQbApFZ12k0niRSyrgBh2nwm7pjIS_tmpjU8u1XQgilgwiz9546pdgfeVEgkwXE2qXOIwpAeDct5YhpDxYs7CV2DY8R5sWft9Z3OTrFnPJEUNngToQp02PuhJ1p5V3N4uRdmDQjQyq63V4IfHyR4DwgwoAXDQH0_3YRJOo5t7EBvoLJwZa6Jrc6c29rYOFyNKgWYyRBeDd-a9CTFxz6gTrvwZ8I5-4HPO4"/>
+<div class="absolute bottom-4 left-4">
+<span class="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface/50">Front</span>
+</div>
+</div>
+<div class="aspect-[3/4] overflow-hidden rounded-xl bg-surface-container-low border border-outline-variant/10 group cursor-pointer">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100" data-alt="cinematic side profile of a person showing muscular definition with moody dark contrast lighting and charcoal textures" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMxMwlPiAZAewWdaNg1YFb83i8NFsRPB_fyzSV3e8Z9pPFBJ92TfFQb4iC0SMtVOIaQXz7hA5ekh4p4JGNJbz9ZIKT_-rUpcaG2muRRdu4tAaollWH__u-fZd8mR55JvA4LQyWV0yfKVx1QCkXmjuxwfTM8P57JrUHWDObzQnJMjCnlfYrVkCShLM3JRTFkFqDTAWAiOT7PmU79keqgkzuRBmd70DFj0yig40t8Ebrk90sThUE6r3goJVcoyB7ur027SevJkJBLXw"/>
+<div class="absolute bottom-4 left-4">
+<span class="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface/50">Side</span>
+</div>
+</div>
+<div class="aspect-[3/4] overflow-hidden rounded-xl bg-surface-container-low border border-outline-variant/10 group cursor-pointer">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100" data-alt="low light muscular back pose with sharp details and elegant shadows in a minimal dark studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAN-FJ_8IsQxOjsJyoMrG4aEBJ9ESaiLc6l7hr7zgYGpwhnzypVvh9fTuJZB16uK6jcn05PKPkS76rnQtEvMqx6EL57ktZ1m9F8xmYfwWAl-UdvJVkQMTLqw2ckoRDlf6v5ZVaGVMiUa50IQGhn_AlL_a7-xmUN4qLqLiLWxEBP16UoMZ7d4YtloekACZrexyYQhXpuB4XVYTuP9CALXHU9qyY1nuoz7EZKoXEJQ0iVc7yLI_ayNpAhGyIlhW1WZmW6jlzrBi9q35g"/>
+<div class="absolute bottom-4 left-4">
+<span class="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface/50">Back</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Entry 2 -->
+<article class="relative md:pl-16">
+<!-- Timeline Node -->
+<div class="hidden md:block absolute left-4 top-2 w-2 h-2 rounded-full bg-outline-variant"></div>
+<header class="flex flex-wrap items-baseline gap-x-6 mb-8">
+<h3 class="font-headline font-extrabold text-3xl text-on-surface/60">October 10</h3>
+<span class="text-secondary/60 font-label uppercase tracking-widest text-xs">83.1 kg</span>
+<span class="px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant text-[10px] font-bold uppercase tracking-wider">Historical</span>
+</header>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 opacity-60 hover:opacity-100 transition-opacity duration-500">
+<div class="aspect-[3/4] overflow-hidden rounded-xl bg-surface-container-low border border-outline-variant/10">
+<img class="w-full h-full object-cover" data-alt="monochrome fitness portrait with atmospheric lighting and subtle grain showcasing physical progress in a vault aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuwgUR4Zcstaj8h4BQj1E7165g0kpanUA6r5ihD6YuOR7N3AZEVUUU5Tu3_03JKzblbA03hY4ch0yWnYR6SjXL7M4Pllb1No8cDfbIApkvc58drFngm5xPL1DdEKarRr4vBfLrlBWTfnENW6qZKKcoHdbKi6eOO8TPRnV-0PoMp_eeExgGY-8V9hEFFmNn6ZVl2JZC3lKo1RK0rdUr0vISqzx7mqWolk_zK4dSyzBAx3O3PRyJ0IYLs54iJmWKmu49hNuB3A4U3rc"/>
+</div>
+<div class="aspect-[3/4] overflow-hidden rounded-xl bg-surface-container-low border border-outline-variant/10">
+<img class="w-full h-full object-cover" data-alt="artistic side profile photography with dramatic shadows and high contrast monochrome tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJwMK4PmSxvhiJzhPhNijf0YsehFjkrwCNwKatvcp7XtCMuMncprFtqlJMO7AwAtjZkT-YZLk0kKjWBnlaz8td6KcvqeOpPU6J68T0bK2YXv4DenIwPpxXShTnwdfgG5TcbD_aZOM82QSmTIiSn6xdCJHQ0V-obiudTnL2R1ILh-w86fQg611GthYbjcMj2Y39Dh-aQeUMoaMR0NlkHAGZiJMaTsEPigWiJS9dTNV4K2VDc9XbmoXzd6q67BQvG0pf8a_-yzP7Hls"/>
+</div>
+<div class="aspect-[3/4] overflow-hidden rounded-xl bg-surface-container-low border border-outline-variant/10">
+<img class="w-full h-full object-cover" data-alt="back profile of an athlete in dark moody lighting with subtle rim light emphasizing form" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2i8fqog9poiMgs6v2_Cq8jgQXKC3uLZpTxRhRExGM1s8T8UwO8m9L10A-ZLE3LBYoAkeNgP8rznL_CC11vIKFLhBesaBK7gVajWbBTobc5PqqvPahaGH6E7x80O_kc6b2jgo1f2bLmDeHmM-Ckk0o9tE98uRj-HIO4NwHDkAi0YFLKfV5rbK8UjzW2PAxu86ZCRJhelLyrxIbPZdNWaJm_FCNI86BLss24naTOVQgwlbSCXj5H3K4_fMHzjywHF2Tw7xW5Z0K1nI"/>
+</div>
+</div>
+</article>
+<!-- Entry 3 -->
+<article class="relative md:pl-16 pb-12">
+<!-- Timeline Node -->
+<div class="hidden md:block absolute left-4 top-2 w-2 h-2 rounded-full bg-outline-variant"></div>
+<header class="flex flex-wrap items-baseline gap-x-6 mb-8">
+<h3 class="font-headline font-extrabold text-3xl text-on-surface/60">September 26</h3>
+<span class="text-secondary/60 font-label uppercase tracking-widest text-xs">84.5 kg</span>
+</header>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 opacity-40">
+<div class="aspect-[3/4] overflow-hidden rounded-xl bg-surface-container-low border border-outline-variant/10"></div>
+<div class="aspect-[3/4] overflow-hidden rounded-xl bg-surface-container-low border border-outline-variant/10"></div>
+<div class="aspect-[3/4] overflow-hidden rounded-xl bg-surface-container-low border border-outline-variant/10"></div>
+</div>
+</article>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-[#131313]/90 backdrop-blur-xl dark:bg-[#131313]/90 z-50 shadow-[0_-4px_32px_rgba(172,203,222,0.06)] px-6 pb-8 pt-4 flex justify-around items-center">
+<a class="flex flex-col items-center justify-center text-[#accbde] font-bold transition-colors duration-300 scale-90 active:duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">history</span>
+<span class="font-inter text-[10px] uppercase tracking-[0.05em] font-medium mt-1">Timeline</span>
+</a>
+<a class="flex flex-col items-center justify-center text-gray-600 hover:text-[#accbde] transition-colors duration-300 scale-90 active:duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">compare_arrows</span>
+<span class="font-inter text-[10px] uppercase tracking-[0.05em] font-medium mt-1">Compare</span>
+</a>
+<a class="flex flex-col items-center justify-center text-gray-600 hover:text-[#accbde] transition-colors duration-300 scale-90 active:duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-inter text-[10px] uppercase tracking-[0.05em] font-medium mt-1">Settings</span>
+</a>
+</nav>
+</body></html>

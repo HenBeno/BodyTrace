@@ -13,9 +13,13 @@ export interface SettingsContextValue {
 const SettingsContext = createContext<SettingsContextValue | undefined>(undefined);
 
 const DEFAULT_SETTINGS: AppSettings = {
-  frequency: 'weekly',
   reminderEnabled: false,
-  reminderDay: 0,
+  reminderMode: 'weeklyDays',
+  reminderTime: { hour: 9, minute: 0 },
+  weeklyDays: [1],
+  monthlyDate: 1,
+  everyXHours: 4,
+  countPerDay: 2,
   biometricEnabled: false,
 };
 
@@ -49,7 +53,17 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!ready) return;
     void syncRemindersWithSettings(settings);
-  }, [ready, settings.reminderEnabled, settings.frequency, settings.reminderDay]);
+  }, [
+    ready,
+    settings.reminderEnabled,
+    settings.reminderMode,
+    settings.reminderTime.hour,
+    settings.reminderTime.minute,
+    settings.weeklyDays,
+    settings.monthlyDate,
+    settings.everyXHours,
+    settings.countPerDay,
+  ]);
 
   const updateSettings = useCallback(async (partial: Partial<AppSettings>) => {
     const next = { ...settingsRef.current, ...partial };
