@@ -53,6 +53,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!ready) return;
     void syncRemindersWithSettings(settings);
+    // Intentionally depend on reminder-related fields only, not whole `settings`
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     ready,
     settings.reminderEnabled,

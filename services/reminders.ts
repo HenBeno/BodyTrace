@@ -64,7 +64,7 @@ function normalizeSettings(settings: AppSettings) {
   };
 }
 
-function countPerDayTimes(countPerDay: number): Array<{ hour: number; minute: number }> {
+function countPerDayTimes(countPerDay: number): { hour: number; minute: number }[] {
   const startMinute = 8 * 60;
   const endMinute = 22 * 60;
   if (countPerDay <= 1) {

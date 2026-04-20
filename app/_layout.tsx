@@ -15,8 +15,10 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useMemo } from "react";
 import { useColorScheme } from "react-native";
+/* eslint-disable import/no-duplicates -- RNGH requires side-effect import before named import from same package */
 import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+/* eslint-enable import/no-duplicates */
 import "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 

@@ -40,3 +40,6 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+.cursor/rules/agent-skills-overview.mdc
+.cursor/rules/react-native-best-practices.mdc
+AGENTS.md
