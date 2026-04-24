@@ -3,7 +3,7 @@ import { Link } from "expo-router"
 import { ChevronRight } from "lucide-react-native"
 import React from "react"
 import { Pressable, Text, View } from "react-native"
-import Animated, { FadeInDown } from "react-native-reanimated"
+import Animated, { FadeInDown, ReduceMotion } from "react-native-reanimated"
 
 import { ResolvedExpoImage } from "@/components/media/ResolvedExpoImage"
 import type { Entry } from "@/types"
@@ -49,7 +49,11 @@ export function TimelineEntry({ entry, index, isLast }: TimelineEntryProps) {
   return (
     <Link href={`/entry/${entry.id}`} asChild>
       <Pressable accessibilityRole="button">
-        <Animated.View entering={FadeInDown.duration(200)}>
+        <Animated.View
+          entering={FadeInDown.duration(260)
+            .delay(Math.min(index * 55, 280))
+            .reduceMotion(ReduceMotion.System)}
+        >
           <View className="mb-6 flex-row">
             <View className="w-8 items-center pt-1">
               {index > 0 ? (
@@ -69,7 +73,7 @@ export function TimelineEntry({ entry, index, isLast }: TimelineEntryProps) {
             </View>
 
             <View className="min-w-0 flex-1 pl-1">
-              <View className="overflow-hidden rounded-3xl border border-white/10 bg-black shadow-vault">
+              <View className="overflow-hidden rounded-3xl border border-cyan-300/20 bg-black shadow-vault">
                 <View
                   className="relative w-full"
                   style={{ aspectRatio: 3 / 4 }}
@@ -84,7 +88,11 @@ export function TimelineEntry({ entry, index, isLast }: TimelineEntryProps) {
                     transition={220}
                   />
                   <LinearGradient
-                    colors={["transparent", "rgba(0,0,0,0.15)", theme.scrim]}
+                    colors={[
+                      "rgba(56,189,248,0.1)",
+                      "rgba(0,0,0,0.18)",
+                      theme.scrim,
+                    ]}
                     locations={[0, 0.45, 1]}
                     style={{
                       position: "absolute",

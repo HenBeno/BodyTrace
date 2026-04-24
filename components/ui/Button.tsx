@@ -16,9 +16,9 @@ export interface ButtonProps extends PressableProps {
 }
 
 const variantClasses: Record<Variant, string> = {
-  primary: "bg-accent",
+  primary: "bg-accent shadow-vault dark:border dark:border-cyan-300/35",
   secondary:
-    "border border-slate-300/90 bg-slate-100 dark:border-white/15 dark:bg-elevated",
+    "border border-slate-300/90 bg-slate-100/95 dark:border-cyan-300/20 dark:bg-elevated/90",
   ghost: "bg-transparent",
 }
 

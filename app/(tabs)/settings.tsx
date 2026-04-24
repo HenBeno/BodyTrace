@@ -13,6 +13,7 @@ import {
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 
 import { Card } from "@/components/ui/Card"
+import { FuturisticBackground } from "@/components/ui/FuturisticBackground"
 import { ScreenHeader } from "@/components/ui/ScreenHeader"
 import { TrustBadge } from "@/components/ui/TrustBadge"
 import { useSettings } from "@/contexts/SettingsContext"
@@ -282,11 +283,11 @@ export default function SettingsScreen() {
 
   if (!ready) {
     return (
-      <SafeAreaView
-        className="flex-1 items-center justify-center bg-slate-50 dark:bg-canvas"
-        edges={["top"]}
-      >
-        <ActivityIndicator color={theme.accent} />
+      <SafeAreaView className="flex-1" edges={["top"]}>
+        <View className="flex-1 items-center justify-center">
+          <FuturisticBackground isDark={isDark} />
+          <ActivityIndicator color={theme.accent} />
+        </View>
       </SafeAreaView>
     )
   }
@@ -297,68 +298,105 @@ export default function SettingsScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-50 dark:bg-canvas" edges={["top"]}>
-      <ScrollView
-        className="flex-1"
-        contentContainerStyle={{
-          paddingHorizontal: 20,
-          paddingTop: 4,
-          paddingBottom: scrollBottomPad,
-        }}
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
-      >
-        <ScreenHeader
-          eyebrow="Security"
-          title="Privacy"
-          subtitle="BodyTrace is built for sensitive progress photos - quiet UI, obvious controls."
-          leftAccessory={<Shield size={28} color={theme.accent} />}
-        />
+    <SafeAreaView className="flex-1" edges={["top"]}>
+      <View className="flex-1">
+        <FuturisticBackground isDark={isDark} />
+        <ScrollView
+          className="flex-1"
+          contentContainerStyle={{
+            paddingHorizontal: 20,
+            paddingTop: 4,
+            paddingBottom: scrollBottomPad,
+          }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <ScreenHeader
+            eyebrow="Security"
+            title="Privacy"
+            subtitle="BodyTrace is built for sensitive progress photos - quiet UI, obvious controls."
+            leftAccessory={<Shield size={28} color={theme.accent} />}
+          />
 
-        <Card className="mb-5 border-l-4 border-l-accent">
-          <View className="flex-row items-start gap-3">
-            <Shield size={28} color={theme.accent} strokeWidth={2} />
-            <View className="min-w-0 flex-1">
-              <Text className="font-inter-bold text-xl text-slate-900 dark:text-vault-fg">
-                {vaultCopy.title}
-              </Text>
-              <Text className="mt-2 text-sm leading-6 text-slate-600 dark:text-vault-muted">
-                {vaultCopy.body}
+          <Card className="mb-5 border-l-4 border-l-accent">
+            <View className="flex-row items-start gap-3">
+              <Shield size={28} color={theme.accent} strokeWidth={2} />
+              <View className="min-w-0 flex-1">
+                <Text className="font-inter-bold text-xl text-slate-900 dark:text-vault-fg">
+                  {vaultCopy.title}
+                </Text>
+                <Text className="mt-2 text-sm leading-6 text-slate-600 dark:text-vault-muted">
+                  {vaultCopy.body}
+                </Text>
+              </View>
+            </View>
+            <View className="mt-4">
+              <TrustBadge caption="Encrypted at rest where the OS supports it - keys stay on-device." />
+            </View>
+          </Card>
+
+          <Card className="mb-4">
+            <View className="flex-row items-center gap-2">
+              <Fingerprint size={22} color={theme.accent} />
+              <Text className="font-inter-bold text-lg text-slate-900 dark:text-vault-fg">
+                Biometric app lock
               </Text>
             </View>
-          </View>
-          <View className="mt-4">
-            <TrustBadge caption="Encrypted at rest where the OS supports it - keys stay on-device." />
-          </View>
-        </Card>
+            <Text className="mt-3 text-sm leading-6 text-slate-600 dark:text-vault-muted">
+              When enabled, BodyTrace asks for Face ID, Touch ID, or fingerprint
+              after you leave the app and when you open it again.
+            </Text>
+            <View className="mt-5 min-h-[48px] flex-row items-center justify-between border-t border-slate-100 pt-4 dark:border-white/10">
+              <Text className="flex-1 pr-3 font-inter-medium text-slate-800 dark:text-vault-fg">
+                Require biometrics
+              </Text>
+              {busy ? (
+                <ActivityIndicator color={theme.accent} />
+              ) : (
+                <Switch
+                  value={settings.biometricEnabled}
+                  onValueChange={onBiometricToggle}
+                  trackColor={{
+                    false: isDark ? "#3f3f46" : "#e2e8f0",
+                    true: theme.accentDim,
+                  }}
+                  thumbColor={
+                    settings.biometricEnabled
+                      ? "#f8fafc"
+                      : isDark
+                        ? "#a1a1aa"
+                        : "#fff"
+                  }
+                  ios_backgroundColor={isDark ? "#3f3f46" : "#e2e8f0"}
+                />
+              )}
+            </View>
+          </Card>
 
-        <Card className="mb-4">
-          <View className="flex-row items-center gap-2">
-            <Fingerprint size={22} color={theme.accent} />
-            <Text className="font-inter-bold text-lg text-slate-900 dark:text-vault-fg">
-              Biometric app lock
+          <Card className="mb-2">
+            <View className="flex-row items-center gap-2">
+              <Database size={20} color={theme.accent} />
+              <Text className="font-inter-bold text-lg text-slate-900 dark:text-vault-fg">
+                Friendly reminders
+              </Text>
+            </View>
+            <Text className="mt-2 text-sm leading-6 text-slate-600 dark:text-vault-muted">
+              Pick the reminder style that feels best for your routine.
             </Text>
-          </View>
-          <Text className="mt-3 text-sm leading-6 text-slate-600 dark:text-vault-muted">
-            When enabled, BodyTrace asks for Face ID, Touch ID, or fingerprint
-            after you leave the app and when you open it again.
-          </Text>
-          <View className="mt-5 min-h-[48px] flex-row items-center justify-between border-t border-slate-100 pt-4 dark:border-white/10">
-            <Text className="flex-1 pr-3 font-inter-medium text-slate-800 dark:text-vault-fg">
-              Require biometrics
-            </Text>
-            {busy ? (
-              <ActivityIndicator color={theme.accent} />
-            ) : (
+            <View className="mt-5 min-h-[48px] flex-row items-center justify-between border-b border-slate-100 pb-5 dark:border-white/10">
+              <Text className="flex-1 pr-3 font-inter-medium text-slate-800 dark:text-vault-fg">
+                Enabled
+              </Text>
               <Switch
-                value={settings.biometricEnabled}
-                onValueChange={onBiometricToggle}
+                value={settings.reminderEnabled}
+                onValueChange={onReminderToggle}
+                disabled={busy}
                 trackColor={{
                   false: isDark ? "#3f3f46" : "#e2e8f0",
                   true: theme.accentDim,
                 }}
                 thumbColor={
-                  settings.biometricEnabled
+                  settings.reminderEnabled
                     ? "#f8fafc"
                     : isDark
                       ? "#a1a1aa"
@@ -366,114 +404,22 @@ export default function SettingsScreen() {
                 }
                 ios_backgroundColor={isDark ? "#3f3f46" : "#e2e8f0"}
               />
-            )}
-          </View>
-        </Card>
-
-        <Card className="mb-2">
-          <View className="flex-row items-center gap-2">
-            <Database size={20} color={theme.accent} />
-            <Text className="font-inter-bold text-lg text-slate-900 dark:text-vault-fg">
-              Friendly reminders
-            </Text>
-          </View>
-          <Text className="mt-2 text-sm leading-6 text-slate-600 dark:text-vault-muted">
-            Pick the reminder style that feels best for your routine.
-          </Text>
-          <View className="mt-5 min-h-[48px] flex-row items-center justify-between border-b border-slate-100 pb-5 dark:border-white/10">
-            <Text className="flex-1 pr-3 font-inter-medium text-slate-800 dark:text-vault-fg">
-              Enabled
-            </Text>
-            <Switch
-              value={settings.reminderEnabled}
-              onValueChange={onReminderToggle}
-              disabled={busy}
-              trackColor={{
-                false: isDark ? "#3f3f46" : "#e2e8f0",
-                true: theme.accentDim,
-              }}
-              thumbColor={
-                settings.reminderEnabled
-                  ? "#f8fafc"
-                  : isDark
-                    ? "#a1a1aa"
-                    : "#fff"
-              }
-              ios_backgroundColor={isDark ? "#3f3f46" : "#e2e8f0"}
-            />
-          </View>
-
-          <View className="mt-5">
-            <Text className="font-inter-medium text-slate-800 dark:text-vault-fg">
-              Reminder style
-            </Text>
-            <View className="mt-3 flex-row flex-wrap gap-2">
-              {REMINDER_MODES.map((mode) => {
-                const selected = settings.reminderMode === mode.value
-                return (
-                  <Pressable
-                    key={mode.value}
-                    accessibilityRole="button"
-                    disabled={busy}
-                    onPress={() => {
-                      void onReminderModeChange(mode.value)
-                    }}
-                    className={`rounded-2xl border px-3 py-2 ${
-                      selected
-                        ? "border-accent bg-accent/10"
-                        : "border-slate-200 bg-slate-100 dark:border-white/15 dark:bg-elevated"
-                    }`}
-                  >
-                    <Text
-                      className={`font-inter-semibold ${
-                        selected
-                          ? "text-accent"
-                          : "text-slate-800 dark:text-vault-fg"
-                      }`}
-                    >
-                      {mode.label}
-                    </Text>
-                  </Pressable>
-                )
-              })}
             </View>
-            <Text className="mt-3 text-sm leading-6 text-slate-600 dark:text-vault-muted">
-              {selectedMode.description}
-            </Text>
-          </View>
 
-          {showTimeControls ? (
-            <View>
-              {renderStepper(
-                "Hour",
-                pad2(settings.reminderTime.hour),
-                async () => adjustReminderTime("hour", -1),
-                async () => adjustReminderTime("hour", 1),
-              )}
-              {renderStepper(
-                "Minute",
-                pad2(settings.reminderTime.minute),
-                async () => adjustReminderTime("minute", -5),
-                async () => adjustReminderTime("minute", 5),
-              )}
-            </View>
-          ) : null}
-
-          {settings.reminderMode === "weeklyDays" ? (
             <View className="mt-5">
               <Text className="font-inter-medium text-slate-800 dark:text-vault-fg">
-                Days
+                Reminder style
               </Text>
               <View className="mt-3 flex-row flex-wrap gap-2">
-                {WEEKDAY_OPTIONS.map((day) => {
-                  const selected = settings.weeklyDays.includes(day.value)
+                {REMINDER_MODES.map((mode) => {
+                  const selected = settings.reminderMode === mode.value
                   return (
                     <Pressable
-                      key={day.value}
+                      key={mode.value}
                       accessibilityRole="button"
                       disabled={busy}
                       onPress={() => {
-                        void onToggleWeeklyDay(day.value)
+                        void onReminderModeChange(mode.value)
                       }}
                       className={`rounded-2xl border px-3 py-2 ${
                         selected
@@ -488,50 +434,108 @@ export default function SettingsScreen() {
                             : "text-slate-800 dark:text-vault-fg"
                         }`}
                       >
-                        {day.label}
+                        {mode.label}
                       </Text>
                     </Pressable>
                   )
                 })}
               </View>
+              <Text className="mt-3 text-sm leading-6 text-slate-600 dark:text-vault-muted">
+                {selectedMode.description}
+              </Text>
             </View>
-          ) : null}
 
-          {settings.reminderMode === "monthlyDate"
-            ? renderStepper(
-                "Day of month",
-                settings.monthlyDate,
-                async () => adjustMonthlyDate(-1),
-                async () => adjustMonthlyDate(1),
-              )
-            : null}
-          {settings.reminderMode === "everyXHours"
-            ? renderStepper(
-                "Every X hours",
-                settings.everyXHours,
-                async () => adjustEveryXHours(-1),
-                async () => adjustEveryXHours(1),
-              )
-            : null}
-          {settings.reminderMode === "countPerDay"
-            ? renderStepper(
-                "Reminders per day",
-                settings.countPerDay,
-                async () => adjustCountPerDay(-1),
-                async () => adjustCountPerDay(1),
-              )
-            : null}
+            {showTimeControls ? (
+              <View>
+                {renderStepper(
+                  "Hour",
+                  pad2(settings.reminderTime.hour),
+                  async () => adjustReminderTime("hour", -1),
+                  async () => adjustReminderTime("hour", 1),
+                )}
+                {renderStepper(
+                  "Minute",
+                  pad2(settings.reminderTime.minute),
+                  async () => adjustReminderTime("minute", -5),
+                  async () => adjustReminderTime("minute", 5),
+                )}
+              </View>
+            ) : null}
 
-          <View className="mt-5 rounded-2xl border border-slate-200 bg-slate-100 px-3 py-3 dark:border-white/10 dark:bg-elevated">
-            <Text className="font-inter-semibold text-slate-800 dark:text-vault-fg">
-              Reminder preview
-            </Text>
-            <Text className="mt-1 text-sm leading-6 text-slate-600 dark:text-vault-muted">
-              {reminderPreview(settings)}
-            </Text>
-          </View>
-        </Card>
-      </ScrollView>
+            {settings.reminderMode === "weeklyDays" ? (
+              <View className="mt-5">
+                <Text className="font-inter-medium text-slate-800 dark:text-vault-fg">
+                  Days
+                </Text>
+                <View className="mt-3 flex-row flex-wrap gap-2">
+                  {WEEKDAY_OPTIONS.map((day) => {
+                    const selected = settings.weeklyDays.includes(day.value)
+                    return (
+                      <Pressable
+                        key={day.value}
+                        accessibilityRole="button"
+                        disabled={busy}
+                        onPress={() => {
+                          void onToggleWeeklyDay(day.value)
+                        }}
+                        className={`rounded-2xl border px-3 py-2 ${
+                          selected
+                            ? "border-accent bg-accent/10"
+                            : "border-slate-200 bg-slate-100 dark:border-white/15 dark:bg-elevated"
+                        }`}
+                      >
+                        <Text
+                          className={`font-inter-semibold ${
+                            selected
+                              ? "text-accent"
+                              : "text-slate-800 dark:text-vault-fg"
+                          }`}
+                        >
+                          {day.label}
+                        </Text>
+                      </Pressable>
+                    )
+                  })}
+                </View>
+              </View>
+            ) : null}
+
+            {settings.reminderMode === "monthlyDate"
+              ? renderStepper(
+                  "Day of month",
+                  settings.monthlyDate,
+                  async () => adjustMonthlyDate(-1),
+                  async () => adjustMonthlyDate(1),
+                )
+              : null}
+            {settings.reminderMode === "everyXHours"
+              ? renderStepper(
+                  "Every X hours",
+                  settings.everyXHours,
+                  async () => adjustEveryXHours(-1),
+                  async () => adjustEveryXHours(1),
+                )
+              : null}
+            {settings.reminderMode === "countPerDay"
+              ? renderStepper(
+                  "Reminders per day",
+                  settings.countPerDay,
+                  async () => adjustCountPerDay(-1),
+                  async () => adjustCountPerDay(1),
+                )
+              : null}
+
+            <View className="mt-5 rounded-2xl border border-slate-200 bg-slate-100 px-3 py-3 dark:border-white/10 dark:bg-elevated">
+              <Text className="font-inter-semibold text-slate-800 dark:text-vault-fg">
+                Reminder preview
+              </Text>
+              <Text className="mt-1 text-sm leading-6 text-slate-600 dark:text-vault-muted">
+                {reminderPreview(settings)}
+              </Text>
+            </View>
+          </Card>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   )
 }

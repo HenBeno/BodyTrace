@@ -15,8 +15,8 @@ export function Card({
 }: CardProps) {
   const surface =
     variant === "vault"
-      ? "rounded-3xl border border-slate-200/90 bg-white shadow-sm dark:border-white/10 dark:bg-surface dark:shadow-vault"
-      : "rounded-3xl border border-slate-200/90 bg-slate-50 dark:border-white/10 dark:bg-elevated"
+      ? "rounded-3xl border border-slate-200/90 bg-white/90 shadow-sm dark:border-cyan-300/20 dark:bg-surface/85 dark:shadow-vault"
+      : "rounded-3xl border border-slate-200/90 bg-slate-50/95 dark:border-white/15 dark:bg-elevated/90"
 
   return (
     <View className={`${surface} p-4 ${className}`} {...rest}>

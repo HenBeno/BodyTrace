@@ -20,6 +20,7 @@ import "react-native-gesture-handler"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 /* eslint-enable import/no-duplicates */
 import "react-native-reanimated"
+import { ReduceMotion, ReducedMotionConfig } from "react-native-reanimated"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 
 import "../global.css"
@@ -117,6 +118,7 @@ function RootLayoutNav() {
       <SafeAreaProvider>
         <ThemeProvider value={navTheme}>
           <SettingsProvider>
+            <ReducedMotionConfig mode={ReduceMotion.System} />
             <SecurityGate>
               <EntriesProvider>
                 <Stack
