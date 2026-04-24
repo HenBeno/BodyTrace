@@ -310,8 +310,8 @@ export default function SettingsScreen() {
   }
 
   const vaultCopy = {
-    title: "Your vault is mostly local",
-    body: "Timeline, photos, and measurements stay in a private app folder with a local SQLite database. Your account profile (onboarding details you save) syncs to Supabase so you can sign in across devices.",
+    title: "Your vault is local-first",
+    body: "Timeline entries and photos are stored in a private app folder with a local SQLite database. When you are signed in on iOS or Android, the app also mirrors those entries and photos to your Supabase project (HTTPS + row-level security). That is not end-to-end encrypted from the cloud provider’s perspective—only your account can access them via the app, but project admins with full Supabase access could technically reach the data.",
   }
 
   return (

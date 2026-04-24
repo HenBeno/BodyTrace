@@ -95,7 +95,9 @@ BodyTrace requires a Supabase project for email/password sign-in and the `profil
 2. Copy [`.env.example`](.env.example) to `.env` and set:
    - `EXPO_PUBLIC_SUPABASE_URL`
    - `EXPO_PUBLIC_SUPABASE_ANON_KEY`
-3. In the Supabase SQL editor, run the migration in [`supabase/migrations/20260424120000_profiles.sql`](supabase/migrations/20260424120000_profiles.sql) (creates `profiles` + RLS policies).
+3. In the Supabase SQL editor, run the migrations (in order):
+   - [`supabase/migrations/20260424120000_profiles.sql`](supabase/migrations/20260424120000_profiles.sql) — `profiles` + RLS.
+   - [`supabase/migrations/20260424180000_journal_entries_and_storage.sql`](supabase/migrations/20260424180000_journal_entries_and_storage.sql) — `journal_entries` table, private `entry-photos` bucket, and Storage RLS (timeline sync MVP).
 4. If email confirmation is enabled in Supabase Auth, new users must confirm email before a session is created.
 
 Restart Expo after changing env vars.

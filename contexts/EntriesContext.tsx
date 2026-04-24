@@ -8,6 +8,8 @@ import React, {
 } from "react"
 import { Platform } from "react-native"
 
+import { useAuth } from "@/contexts/AuthContext"
+import { isSupabaseConfigured } from "@/lib/env"
 import type { Entry, PhotoAngle } from "@/types"
 import {
   deleteEntryById,
@@ -15,6 +17,13 @@ import {
   insertEntry,
   loadAllEntries,
 } from "@/services/database"
+import {
+  clearJournalRemoteApplied,
+  deleteRemoteJournalEntry,
+  pushJournalEntryToRemote,
+  syncJournalForUser,
+} from "@/services/entrySyncRepository"
+import { enqueueJournalSyncItem } from "@/services/syncQueue"
 import {
   deleteEntryMediaFolder,
   persistEntryPhotos,
@@ -48,9 +57,17 @@ export interface EntriesContextValue {
 const EntriesContext = createContext<EntriesContextValue | undefined>(undefined)
 
 export function EntriesProvider({ children }: { children: React.ReactNode }) {
+  const { session, needsOnboarding } = useAuth()
   const [entries, setEntries] = useState<Entry[]>([])
   const [ready, setReady] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
+
+  const userId = session?.user?.id
+  const shouldCloudSync =
+    Platform.OS !== "web" &&
+    isSupabaseConfigured &&
+    Boolean(userId) &&
+    !needsOnboarding
 
   useEffect(() => {
     let cancelled = false
@@ -74,6 +91,29 @@ export function EntriesProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
+  useEffect(() => {
+    if (!ready || Platform.OS === "web" || !shouldCloudSync || !userId) {
+      return
+    }
+    let cancelled = false
+    ;(async () => {
+      try {
+        await syncJournalForUser(userId)
+        if (cancelled) return
+        await ensureInitialized()
+        const list = await loadAllEntries()
+        if (!cancelled) {
+          setEntries(list.sort(sortByDateDesc))
+        }
+      } catch {
+        // Offline or transient errors — local data stays usable.
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [ready, shouldCloudSync, userId])
+
   const refreshEntries = useCallback(async () => {
     setRefreshing(true)
     try {
@@ -87,26 +127,45 @@ export function EntriesProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
-  const addEntry = useCallback(async (entry: Entry) => {
-    const photos = await persistEntryPhotos(entry.id, entry.photos)
-    const saved: Entry = { ...entry, photos }
-    if (Platform.OS === "web") {
+  const addEntry = useCallback(
+    async (entry: Entry) => {
+      const photos = await persistEntryPhotos(entry.id, entry.photos)
+      const saved: Entry = { ...entry, photos }
+      if (Platform.OS === "web") {
+        setEntries((prev) => [saved, ...prev].sort(sortByDateDesc))
+        return
+      }
+      await insertEntry(saved)
       setEntries((prev) => [saved, ...prev].sort(sortByDateDesc))
-      return
-    }
-    await insertEntry(saved)
-    setEntries((prev) => [saved, ...prev].sort(sortByDateDesc))
-  }, [])
 
-  const removeEntry = useCallback(async (id: string) => {
-    if (Platform.OS === "web") {
+      if (shouldCloudSync && userId) {
+        void pushJournalEntryToRemote(userId, saved).catch(() =>
+          enqueueJournalSyncItem({ kind: "push", entryId: saved.id }),
+        )
+      }
+    },
+    [shouldCloudSync, userId],
+  )
+
+  const removeEntry = useCallback(
+    async (id: string) => {
+      if (Platform.OS === "web") {
+        setEntries((prev) => prev.filter((e) => e.id !== id))
+        return
+      }
+      await deleteEntryById(id)
+      await deleteEntryMediaFolder(id).catch(() => undefined)
       setEntries((prev) => prev.filter((e) => e.id !== id))
-      return
-    }
-    await deleteEntryById(id)
-    await deleteEntryMediaFolder(id).catch(() => undefined)
-    setEntries((prev) => prev.filter((e) => e.id !== id))
-  }, [])
+
+      void clearJournalRemoteApplied(id).catch(() => undefined)
+      if (shouldCloudSync && userId) {
+        void deleteRemoteJournalEntry(userId, id).catch(() =>
+          enqueueJournalSyncItem({ kind: "delete", entryId: id }),
+        )
+      }
+    },
+    [shouldCloudSync, userId],
+  )
 
   const getOldestEntry = useCallback(() => {
     const sorted = [...entries].sort(sortByDateAsc)
