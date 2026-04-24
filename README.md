@@ -10,6 +10,7 @@
 - [Tech stack](#tech-stack)
 - [Requirements](#requirements)
 - [Getting started](#getting-started)
+- [Account (Supabase)](#account-supabase)
 - [Project structure](#project-structure)
 - [Architecture](#architecture)
 - [Camera and ghost overlay](#camera-and-ghost-overlay)
@@ -30,6 +31,7 @@
 - **Settings** — Reminder preferences (frequency, day), biometric gate toggle, and related app options.
 - **Biometric gate** — When enabled, Face ID / Touch ID (or platform equivalent) is required after cold start and when returning from background (`SecurityGate`).
 - **Local persistence** — SQLite for metadata; photos stored under the app sandbox with optional NaCl secretbox encryption on native.
+- **Account + onboarding** — Email/password via Supabase Auth; required profile onboarding (incl. BMI) before using the app; profile row stored in Supabase (`profiles`).
 
 ---
 
@@ -42,7 +44,8 @@
 | Navigation       | [Expo Router](https://docs.expo.dev/router/introduction/) (file-based, typed routes)                                                                                                  |
 | Styling          | [NativeWind](https://www.nativewind.dev/) v4 (Tailwind CSS)                                                                                                                           |
 | Icons            | [Lucide React Native](https://lucide.dev/)                                                                                                                                            |
-| State            | React Context (`EntriesContext`, `SettingsContext`)                                                                                                                                   |
+| State            | React Context (`AuthContext`, `EntriesContext`, `SettingsContext`)                                                                                                                    |
+| Auth / backend   | [Supabase](https://supabase.com/) Auth + Postgres (`profiles` table)                                                                                                                  |
 | Database         | [expo-sqlite](https://docs.expo.dev/versions/latest/sdk/sqlite/)                                                                                                                      |
 | Camera           | [expo-camera](https://docs.expo.dev/versions/latest/sdk/camera/)                                                                                                                      |
 | Crypto / secrets | [expo-crypto](https://docs.expo.dev/versions/latest/sdk/crypto/), [expo-secure-store](https://docs.expo.dev/versions/latest/sdk/securestore/), [TweetNaCl](https://tweetnacl.js.org/) |
@@ -84,6 +87,21 @@ npm run web
 
 ---
 
+## Account (Supabase)
+
+BodyTrace requires a Supabase project for email/password sign-in and the `profiles` table used during onboarding.
+
+1. Create a Supabase project and copy the **Project URL** + **anon public key**.
+2. Copy [`.env.example`](.env.example) to `.env` and set:
+   - `EXPO_PUBLIC_SUPABASE_URL`
+   - `EXPO_PUBLIC_SUPABASE_ANON_KEY`
+3. In the Supabase SQL editor, run the migration in [`supabase/migrations/20260424120000_profiles.sql`](supabase/migrations/20260424120000_profiles.sql) (creates `profiles` + RLS policies).
+4. If email confirmation is enabled in Supabase Auth, new users must confirm email before a session is created.
+
+Restart Expo after changing env vars.
+
+---
+
 ## Project structure
 
 ```
@@ -91,18 +109,20 @@ bodytrace/
 ├── app/                      # Expo Router screens
 │   ├── (tabs)/               # Tab navigator: home, camera, compare, settings
 │   ├── entry/                # Stack: new entry, entry detail [id]
-│   └── _layout.tsx           # Root: fonts, theme, providers, SecurityGate
+│   ├── (auth)/               # Email login + signup
+│   ├── (onboarding)/         # Required profile + BMI onboarding
+│   └── _layout.tsx           # Root: fonts, theme, providers, navigation gate
 ├── components/               # Reusable UI
-│   ├── auth/                 # SecurityGate
+│   ├── auth/                 # SecurityGate, redirects, root navigation shell
 │   ├── camera/               # Ghost overlay, alignment, controls
 │   ├── comparison/           # Side-by-side, slider
 │   ├── measurements/         # Body measurement UI
 │   ├── media/                # Image resolution helpers
 │   ├── timeline/             # Timeline list / cards
 │   └── ui/                   # Buttons, cards, headers, etc.
-├── contexts/                 # EntriesProvider, SettingsProvider
+├── contexts/                 # AuthProvider, EntriesProvider, SettingsProvider
 ├── hooks/                    # Camera, entries, secure storage, photo URIs
-├── services/                 # database, encryption, mediaStore, biometric, export, reminders
+├── services/                 # database, profileRepository, encryption, mediaStore, biometric, export, reminders
 ├── types/                    # Shared TypeScript models (Entry, AppSettings, …)
 ├── utils/                    # Theme, navigation helpers, constants, measurements
 ├── assets/                   # Images, fonts

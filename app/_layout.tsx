@@ -11,22 +11,23 @@ import {
   ThemeProvider,
 } from "@react-navigation/native"
 import { useFonts } from "expo-font"
-import { Stack } from "expo-router"
 import * as SplashScreen from "expo-splash-screen"
-import { useEffect, useMemo } from "react"
+import { useEffect } from "react"
 import { I18nManager, useColorScheme } from "react-native"
 /* eslint-disable import/no-duplicates -- RNGH requires side-effect import before named import from same package */
 import "react-native-gesture-handler"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 /* eslint-enable import/no-duplicates */
+/* eslint-disable import/no-duplicates -- Reanimated requires side-effect import before named import */
 import "react-native-reanimated"
 import { ReduceMotion, ReducedMotionConfig } from "react-native-reanimated"
+/* eslint-enable import/no-duplicates */
 import { SafeAreaProvider } from "react-native-safe-area-context"
 
 import "../global.css"
 
-import { SecurityGate } from "@/components/auth/SecurityGate"
-import { EntriesProvider } from "@/contexts/EntriesContext"
+import { AppNavigation } from "@/components/auth/AppNavigation"
+import { AuthProvider } from "@/contexts/AuthContext"
 import { SettingsProvider } from "@/contexts/SettingsContext"
 import { theme } from "@/utils/theme"
 
@@ -97,14 +98,6 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme()
   const isDark = colorScheme === "dark"
   const navTheme = isDark ? VaultDarkTheme : VaultLightTheme
-  const stackBg = useMemo(
-    () => ({
-      backgroundColor: isDark
-        ? theme.canvas
-        : VaultLightTheme.colors.background,
-    }),
-    [isDark],
-  )
 
   return (
     <GestureHandlerRootView
@@ -117,25 +110,12 @@ function RootLayoutNav() {
     >
       <SafeAreaProvider>
         <ThemeProvider value={navTheme}>
-          <SettingsProvider>
-            <ReducedMotionConfig mode={ReduceMotion.System} />
-            <SecurityGate>
-              <EntriesProvider>
-                <Stack
-                  screenOptions={{
-                    contentStyle: stackBg,
-                    animation: "slide_from_right",
-                  }}
-                >
-                  <Stack.Screen
-                    name="(tabs)"
-                    options={{ headerShown: false }}
-                  />
-                  <Stack.Screen name="entry" options={{ headerShown: false }} />
-                </Stack>
-              </EntriesProvider>
-            </SecurityGate>
-          </SettingsProvider>
+          <AuthProvider>
+            <SettingsProvider>
+              <ReducedMotionConfig mode={ReduceMotion.System} />
+              <AppNavigation />
+            </SettingsProvider>
+          </AuthProvider>
         </ThemeProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

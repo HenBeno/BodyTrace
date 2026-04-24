@@ -51,7 +51,6 @@ export default function TabLayout() {
   const isDark = colorScheme === "dark"
   const inactive = isDark ? theme.mutedText : "#64748b"
   const active = theme.accent
-  const barBg = isDark ? theme.canvas : "#ffffff"
   const border = isDark ? "rgba(255,255,255,0.1)" : "rgba(15,23,42,0.08)"
 
   return (

@@ -14,32 +14,48 @@ import { useSettings } from "@/contexts/SettingsContext"
 import { authenticateWithBiometrics } from "@/services/biometric"
 import { theme } from "@/utils/theme"
 
-export function SecurityGate({ children }: { children: React.ReactNode }) {
+export function SecurityGate({
+  children,
+  enabled = true,
+}: {
+  children: React.ReactNode
+  /** When false, biometric lock is skipped (e.g. auth / onboarding routes). */
+  enabled?: boolean
+}) {
   const { settings, ready: settingsReady } = useSettings()
   const [sessionUnlocked, setSessionUnlocked] = useState<boolean | null>(null)
 
   useEffect(() => {
+    if (!enabled) {
+      setSessionUnlocked(true)
+      return
+    }
     if (!settingsReady) return
     if (!settings.biometricEnabled) {
       setSessionUnlocked(true)
       return
     }
     setSessionUnlocked(false)
-  }, [settingsReady, settings.biometricEnabled])
+  }, [enabled, settingsReady, settings.biometricEnabled])
 
   useEffect(() => {
     const sub = AppState.addEventListener("change", (next) => {
+      if (!enabled) return
       if (next === "background" && settings.biometricEnabled) {
         setSessionUnlocked(false)
       }
     })
     return () => sub.remove()
-  }, [settings.biometricEnabled])
+  }, [enabled, settings.biometricEnabled])
 
   const onUnlock = useCallback(async () => {
     const ok = await authenticateWithBiometrics("Unlock BodyTrace")
     if (ok) setSessionUnlocked(true)
   }, [])
+
+  if (!enabled) {
+    return <View className="flex-1 bg-slate-50 dark:bg-canvas">{children}</View>
+  }
 
   if (!settingsReady) {
     return (
@@ -49,7 +65,8 @@ export function SecurityGate({ children }: { children: React.ReactNode }) {
     )
   }
 
-  const locked = settings.biometricEnabled && sessionUnlocked !== true
+  const locked =
+    enabled && settings.biometricEnabled && sessionUnlocked !== true
 
   return (
     <View className="flex-1 bg-slate-50 dark:bg-canvas">

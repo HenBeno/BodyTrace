@@ -1,4 +1,10 @@
-import { Database, Fingerprint, Shield } from "lucide-react-native"
+import {
+  Database,
+  Fingerprint,
+  LogOut,
+  Mail,
+  Shield,
+} from "lucide-react-native"
 import React, { useCallback, useState } from "react"
 import {
   ActivityIndicator,
@@ -16,6 +22,7 @@ import { Card } from "@/components/ui/Card"
 import { FuturisticBackground } from "@/components/ui/FuturisticBackground"
 import { ScreenHeader } from "@/components/ui/ScreenHeader"
 import { TrustBadge } from "@/components/ui/TrustBadge"
+import { useAuth } from "@/contexts/AuthContext"
 import { useSettings } from "@/contexts/SettingsContext"
 import {
   authenticateWithBiometrics,
@@ -104,6 +111,7 @@ function reminderPreview(settings: AppSettings) {
 
 export default function SettingsScreen() {
   const insets = useSafeAreaInsets()
+  const { user, signOut } = useAuth()
   const { settings, ready, updateSettings } = useSettings()
   const [busy, setBusy] = useState(false)
   const colorScheme = useColorScheme()
@@ -226,6 +234,15 @@ export default function SettingsScreen() {
     [runUpdate, settings.countPerDay],
   )
 
+  const onSignOut = useCallback(async () => {
+    setBusy(true)
+    try {
+      await signOut()
+    } finally {
+      setBusy(false)
+    }
+  }, [signOut])
+
   const renderStepper = (
     label: string,
     value: string | number,
@@ -293,8 +310,8 @@ export default function SettingsScreen() {
   }
 
   const vaultCopy = {
-    title: "Your vault is local",
-    body: "Timeline, photos, and measurements stay in a private app folder with a local SQLite database. Nothing is uploaded by BodyTrace.",
+    title: "Your vault is mostly local",
+    body: "Timeline, photos, and measurements stay in a private app folder with a local SQLite database. Your account profile (onboarding details you save) syncs to Supabase so you can sign in across devices.",
   }
 
   return (
@@ -317,6 +334,37 @@ export default function SettingsScreen() {
             subtitle="BodyTrace is built for sensitive progress photos - quiet UI, obvious controls."
             leftAccessory={<Shield size={28} color={theme.accent} />}
           />
+
+          <Card className="mb-5">
+            <View className="flex-row items-center gap-2">
+              <Mail size={22} color={theme.accent} />
+              <Text className="font-inter-bold text-lg text-slate-900 dark:text-vault-fg">
+                Account
+              </Text>
+            </View>
+            <Text className="mt-3 text-sm leading-6 text-slate-600 dark:text-vault-muted">
+              Signed in as{" "}
+              <Text className="font-inter-semibold text-slate-800 dark:text-vault-fg">
+                {user?.email ?? "Unknown"}
+              </Text>
+              . Signing out returns you to the email login screen.
+            </Text>
+            <View className="mt-5">
+              <Pressable
+                accessibilityRole="button"
+                disabled={busy}
+                onPress={() => {
+                  void onSignOut()
+                }}
+                className="min-h-[52px] flex-row items-center justify-center gap-2 rounded-2xl border border-slate-300/90 bg-slate-100/95 px-5 py-3.5 dark:border-cyan-300/20 dark:bg-elevated/90"
+              >
+                <LogOut size={20} color={theme.accent} />
+                <Text className="font-inter-semibold text-slate-900 dark:text-vault-fg">
+                  Sign out
+                </Text>
+              </Pressable>
+            </View>
+          </Card>
 
           <Card className="mb-5 border-l-4 border-l-accent">
             <View className="flex-row items-start gap-3">
