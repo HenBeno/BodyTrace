@@ -20,28 +20,8 @@ import { PressableScale } from "@/components/ui/PressableScale"
 import { ScreenHeader } from "@/components/ui/ScreenHeader"
 import { useEntries } from "@/contexts/EntriesContext"
 import { APP_NAME } from "@/utils/constants"
+import { computeMedalsProgress, getConsecutiveDayStreak } from "@/utils/medals"
 import { theme } from "@/utils/theme"
-
-function startOfDay(date: Date) {
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()
-}
-
-function getConsecutiveDayStreak(dates: Date[]) {
-  if (dates.length === 0) return 0
-  const unique = Array.from(new Set(dates.map(startOfDay))).sort(
-    (a, b) => b - a,
-  )
-  let streak = 1
-  for (let i = 1; i < unique.length; i += 1) {
-    const diff = unique[i - 1] - unique[i]
-    if (diff === 24 * 60 * 60 * 1000) {
-      streak += 1
-    } else {
-      break
-    }
-  }
-  return streak
-}
 
 function FloatingNewEntryCta() {
   const pulse = useSharedValue(1)
@@ -88,6 +68,7 @@ export default function HomeScreen() {
     () => getConsecutiveDayStreak(entries.map((e) => e.createdAt)),
     [entries],
   )
+  const medalsSnapshot = useMemo(() => computeMedalsProgress(entries), [entries])
 
   const header = (
     <View>
@@ -140,7 +121,9 @@ export default function HomeScreen() {
         <View className="mt-3 flex-row items-center gap-2">
           <Target size={14} color={theme.mutedText} />
           <Text className="text-xs text-slate-600 dark:text-vault-muted">
-            Goal: 3 check-ins this week
+            {medalsSnapshot.nextMedal
+              ? `Next medal: ${medalsSnapshot.nextMedal.title}`
+              : "All medals unlocked. Keep your momentum alive."}
           </Text>
         </View>
       </Animated.View>

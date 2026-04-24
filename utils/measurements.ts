@@ -38,3 +38,13 @@ export function formatMeasurementDisplay(
   const s = Number.isInteger(n) ? String(n) : String(parseFloat(n.toFixed(2)))
   return `${s} ${m.unit}`
 }
+
+const KG_PER_LB = 0.45359237
+
+export function toKilograms(weight: WeightMeasure): number {
+  return weight.unit === "kg" ? weight.value : weight.value * KG_PER_LB
+}
+
+export function toPounds(weight: WeightMeasure): number {
+  return weight.unit === "lb" ? weight.value : weight.value / KG_PER_LB
+}

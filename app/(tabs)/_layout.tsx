@@ -1,7 +1,7 @@
 import { BlurView } from "expo-blur"
 import { LinearGradient } from "expo-linear-gradient"
 import { Tabs } from "expo-router"
-import { Columns2, Home, Settings } from "lucide-react-native"
+import { Award, Columns2, Home, Settings } from "lucide-react-native"
 import React from "react"
 import { useColorScheme } from "react-native"
 import Animated, {
@@ -123,6 +123,20 @@ export default function TabLayout() {
               color={color}
               size={size}
               Icon={Columns2}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="medals"
+        options={{
+          title: "Medals",
+          tabBarIcon: ({ color, size, focused }) => (
+            <FuturisticTabIcon
+              focused={focused}
+              color={color}
+              size={size}
+              Icon={Award}
             />
           ),
         }}
