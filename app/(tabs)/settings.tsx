@@ -1,3 +1,4 @@
+import { Link } from "expo-router"
 import { Database, Fingerprint, Shield } from "lucide-react-native"
 import React, { useCallback, useState } from "react"
 import {
@@ -374,6 +375,19 @@ export default function SettingsScreen() {
           </Card>
 
           <Card className="mb-2">
+            <Link href="/(tabs)/profile" asChild>
+              <Pressable
+                accessibilityRole="button"
+                className="mb-4 rounded-2xl border border-cyan-300/35 bg-accent/10 px-3 py-3"
+              >
+                <Text className="font-inter-semibold text-accent">
+                  Open profile and goals
+                </Text>
+                <Text className="mt-1 text-xs text-slate-600 dark:text-vault-muted">
+                  Edit personal info, targets, habits, and milestones.
+                </Text>
+              </Pressable>
+            </Link>
             <View className="flex-row items-center gap-2">
               <Database size={20} color={theme.accent} />
               <Text className="font-inter-bold text-lg text-slate-900 dark:text-vault-fg">

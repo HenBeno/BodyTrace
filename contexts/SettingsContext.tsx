@@ -31,6 +31,15 @@ const DEFAULT_SETTINGS: AppSettings = {
   everyXHours: 4,
   countPerDay: 2,
   biometricEnabled: false,
+  profile: {
+    fullName: "",
+  },
+  goals: {
+    circumferenceTargetsCm: {},
+    habitCheckinsPerWeek: 3,
+    habitStreakDays: 7,
+    milestones: [],
+  },
 }
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {

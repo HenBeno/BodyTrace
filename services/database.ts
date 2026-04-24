@@ -5,7 +5,11 @@ import type {
   CircumferenceMeasure,
   Entry,
   PhotoAngle,
+  ProfileSex,
   ReminderMode,
+  UserGoals,
+  UserMilestoneGoal,
+  UserProfile,
   WeightMeasure,
 } from "@/types"
 
@@ -272,6 +276,15 @@ const DEFAULT_SETTINGS: AppSettings = {
   everyXHours: 4,
   countPerDay: 2,
   biometricEnabled: false,
+  profile: {
+    fullName: "",
+  },
+  goals: {
+    circumferenceTargetsCm: {},
+    habitCheckinsPerWeek: 3,
+    habitStreakDays: 7,
+    milestones: [],
+  },
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -298,6 +311,107 @@ function parseWeeklyDays(raw: string | undefined): number[] {
     ...new Set(raw.split(",").map((part) => clamp(Number(part), 0, 6))),
   ].sort((a, b) => a - b)
   return days.length > 0 ? days : [...DEFAULT_SETTINGS.weeklyDays]
+}
+
+function parseProfile(raw: string | undefined): UserProfile {
+  if (!raw) return { ...DEFAULT_SETTINGS.profile }
+  try {
+    const parsed = JSON.parse(raw) as Record<string, unknown>
+    const sexRaw = parsed.sex
+    const sex: ProfileSex | undefined =
+      sexRaw === "male" || sexRaw === "female" || sexRaw === "other"
+        ? sexRaw
+        : undefined
+    const asNumber = (value: unknown) =>
+      typeof value === "number" && Number.isFinite(value) ? value : undefined
+    const clampOptional = (value: number | undefined, min: number, max: number) =>
+      typeof value === "number" ? clamp(value, min, max) : undefined
+    return {
+      fullName: typeof parsed.fullName === "string" ? parsed.fullName : "",
+      age: clampOptional(asNumber(parsed.age), 13, 120),
+      sex,
+      heightCm: clampOptional(asNumber(parsed.heightCm), 90, 260),
+      bodyFatPercent: clampOptional(asNumber(parsed.bodyFatPercent), 2, 80),
+    }
+  } catch {
+    return { ...DEFAULT_SETTINGS.profile }
+  }
+}
+
+function normalizeMilestones(raw: unknown): UserMilestoneGoal[] {
+  if (!Array.isArray(raw)) return []
+  return raw
+    .map((item, index) => {
+      if (!item || typeof item !== "object") return null
+      const rec = item as Record<string, unknown>
+      const title = typeof rec.title === "string" ? rec.title.trim() : ""
+      if (!title) return null
+      return {
+        id:
+          typeof rec.id === "string" && rec.id.length > 0
+            ? rec.id
+            : `m-${index + 1}`,
+        title,
+        targetDate:
+          typeof rec.targetDate === "string" && rec.targetDate.length > 0
+            ? rec.targetDate
+            : undefined,
+        completed: rec.completed === true,
+      }
+    })
+    .filter((goal): goal is UserMilestoneGoal => Boolean(goal))
+}
+
+function parseGoals(raw: string | undefined): UserGoals {
+  if (!raw) return { ...DEFAULT_SETTINGS.goals }
+  try {
+    const parsed = JSON.parse(raw) as Record<string, unknown>
+    const rawTargets =
+      parsed.circumferenceTargetsCm &&
+      typeof parsed.circumferenceTargetsCm === "object"
+        ? (parsed.circumferenceTargetsCm as Record<string, unknown>)
+        : {}
+    const keys = ["neck", "chest", "waist", "hips", "arm", "thigh"] as const
+    const circumferenceTargetsCm: UserGoals["circumferenceTargetsCm"] = {}
+    for (const key of keys) {
+      const value = rawTargets[key]
+      if (typeof value === "number" && Number.isFinite(value)) {
+        circumferenceTargetsCm[key] = clamp(value, 20, 300)
+      }
+    }
+    const targetWeightKg =
+      typeof parsed.targetWeightKg === "number" &&
+      Number.isFinite(parsed.targetWeightKg)
+        ? clamp(parsed.targetWeightKg, 25, 350)
+        : undefined
+    const targetBodyFatPercent =
+      typeof parsed.targetBodyFatPercent === "number" &&
+      Number.isFinite(parsed.targetBodyFatPercent)
+        ? clamp(parsed.targetBodyFatPercent, 2, 80)
+        : undefined
+    return {
+      targetWeightKg,
+      targetBodyFatPercent,
+      circumferenceTargetsCm,
+      habitCheckinsPerWeek: clamp(
+        typeof parsed.habitCheckinsPerWeek === "number"
+          ? parsed.habitCheckinsPerWeek
+          : DEFAULT_SETTINGS.goals.habitCheckinsPerWeek,
+        1,
+        21,
+      ),
+      habitStreakDays: clamp(
+        typeof parsed.habitStreakDays === "number"
+          ? parsed.habitStreakDays
+          : DEFAULT_SETTINGS.goals.habitStreakDays,
+        1,
+        60,
+      ),
+      milestones: normalizeMilestones(parsed.milestones),
+    }
+  } catch {
+    return { ...DEFAULT_SETTINGS.goals }
+  }
 }
 
 export async function loadAppSettings(): Promise<AppSettings> {
@@ -360,6 +474,8 @@ export async function loadAppSettings(): Promise<AppSettings> {
       6,
     ),
     biometricEnabled: map.biometricEnabled === "1",
+    profile: parseProfile(map.profileJson),
+    goals: parseGoals(map.goalsJson),
   }
 }
 
@@ -438,4 +554,47 @@ export async function saveAppSettings(settings: AppSettings): Promise<void> {
     "biometricEnabled",
     settings.biometricEnabled ? "1" : "0",
   )
+  const normalizedProfile: UserProfile = {
+    fullName: settings.profile.fullName.trim(),
+    age:
+      typeof settings.profile.age === "number"
+        ? clamp(settings.profile.age, 13, 120)
+        : undefined,
+    sex: settings.profile.sex,
+    heightCm:
+      typeof settings.profile.heightCm === "number"
+        ? clamp(settings.profile.heightCm, 90, 260)
+        : undefined,
+    bodyFatPercent:
+      typeof settings.profile.bodyFatPercent === "number"
+        ? clamp(settings.profile.bodyFatPercent, 2, 80)
+        : undefined,
+  }
+  const normalizedGoals: UserGoals = {
+    targetWeightKg:
+      typeof settings.goals.targetWeightKg === "number"
+        ? clamp(settings.goals.targetWeightKg, 25, 350)
+        : undefined,
+    targetBodyFatPercent:
+      typeof settings.goals.targetBodyFatPercent === "number"
+        ? clamp(settings.goals.targetBodyFatPercent, 2, 80)
+        : undefined,
+    circumferenceTargetsCm: Object.fromEntries(
+      Object.entries(settings.goals.circumferenceTargetsCm).filter(
+        ([, value]) => typeof value === "number" && Number.isFinite(value),
+      ),
+    ) as UserGoals["circumferenceTargetsCm"],
+    habitCheckinsPerWeek: clamp(settings.goals.habitCheckinsPerWeek, 1, 21),
+    habitStreakDays: clamp(settings.goals.habitStreakDays, 1, 60),
+    milestones: settings.goals.milestones
+      .map((milestone, index) => ({
+        id: milestone.id || `m-${index + 1}`,
+        title: milestone.title.trim(),
+        targetDate: milestone.targetDate?.trim() || undefined,
+        completed: Boolean(milestone.completed),
+      }))
+      .filter((milestone) => milestone.title.length > 0),
+  }
+  await upsertSetting(db, "profileJson", JSON.stringify(normalizedProfile))
+  await upsertSetting(db, "goalsJson", JSON.stringify(normalizedGoals))
 }

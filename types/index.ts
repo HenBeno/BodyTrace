@@ -44,6 +44,34 @@ export interface ReminderTime {
   minute: number
 }
 
+export type ProfileSex = "male" | "female" | "other"
+
+export interface UserProfile {
+  fullName: string
+  age?: number
+  sex?: ProfileSex
+  heightCm?: number
+  bodyFatPercent?: number
+}
+
+export interface UserMilestoneGoal {
+  id: string
+  title: string
+  targetDate?: string
+  completed: boolean
+}
+
+export interface UserGoals {
+  targetWeightKg?: number
+  targetBodyFatPercent?: number
+  circumferenceTargetsCm: Partial<
+    Record<Exclude<keyof Entry["measurements"], "weight">, number>
+  >
+  habitCheckinsPerWeek: number
+  habitStreakDays: number
+  milestones: UserMilestoneGoal[]
+}
+
 export interface AppSettings {
   reminderEnabled: boolean
   reminderMode: ReminderMode
@@ -53,4 +81,6 @@ export interface AppSettings {
   everyXHours: number
   countPerDay: number
   biometricEnabled: boolean
+  profile: UserProfile
+  goals: UserGoals
 }
