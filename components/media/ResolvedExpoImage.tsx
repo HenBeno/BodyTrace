@@ -6,14 +6,16 @@ import { useResolvedPhotoUri } from "@/hooks/useResolvedPhotoUri"
 
 export type ResolvedExpoImageProps = Omit<ImageProps, "source"> & {
   uri?: string | null
+  onResolved?: () => void
 }
 
 export function ResolvedExpoImage({
   uri,
+  onResolved,
   style,
   ...rest
 }: ResolvedExpoImageProps) {
-  const resolved = useResolvedPhotoUri(uri)
+  const resolved = useResolvedPhotoUri(uri, onResolved)
   if (!resolved) {
     return <View style={style} className="bg-neutral-200 dark:bg-neutral-800" />
   }

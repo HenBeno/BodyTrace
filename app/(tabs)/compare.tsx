@@ -16,6 +16,7 @@ import { useEntries } from "@/contexts/EntriesContext"
 import { shareImageUri } from "@/services/export"
 import { lightImpact, selection } from "@/services/haptics"
 import type { PhotoAngle } from "@/types"
+import { getPhotoOriginalUri } from "@/utils/photos"
 import { space, theme } from "@/utils/theme"
 
 const ANGLES: { id: PhotoAngle; label: string }[] = [
@@ -74,8 +75,8 @@ export default function CompareScreen() {
     [defaultNewer?.id, entries, newerId],
   )
 
-  const beforeUri = older?.photos[angle]
-  const afterUri = newer?.photos[angle]
+  const beforeUri = older ? getPhotoOriginalUri(older.photos, angle) : null
+  const afterUri = newer ? getPhotoOriginalUri(newer.photos, angle) : null
 
   const effectiveOlderId = olderId ?? defaultOlder?.id ?? null
   const effectiveNewerId = newerId ?? defaultNewer?.id ?? null

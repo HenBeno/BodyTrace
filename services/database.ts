@@ -10,8 +10,37 @@ import type {
 } from "@/types"
 
 import { deleteEntryMediaFolder } from "@/services/mediaStore"
+import { getPhotoOriginalUri } from "@/utils/photos"
 
 import { ensureDeviceSecret, ensurePhotoEncryptionKey } from "./encryption"
+function serializePhotoCell(photo: Entry["photos"][PhotoAngle]): string {
+  if (!photo) return ""
+  return typeof photo === "string" ? photo : JSON.stringify(photo)
+}
+
+function parsePhotoCell(
+  raw: string,
+): Entry["photos"][PhotoAngle] | undefined {
+  if (!raw) return undefined
+  if (!raw.startsWith("{")) return raw
+  try {
+    const parsed = JSON.parse(raw) as {
+      originalEncUri?: unknown
+      thumbEncUri?: unknown
+    }
+    if (typeof parsed.originalEncUri !== "string" || !parsed.originalEncUri) {
+      return raw
+    }
+    return {
+      originalEncUri: parsed.originalEncUri,
+      thumbEncUri:
+        typeof parsed.thumbEncUri === "string" ? parsed.thumbEncUri : undefined,
+    }
+  } catch {
+    return raw
+  }
+}
+
 
 let dbInstance: SQLite.SQLiteDatabase | null = null
 let initOnce: Promise<void> | null = null
@@ -72,9 +101,18 @@ async function insertEntryInternal(
     [
       entry.id,
       entry.createdAt.getTime(),
-      entry.photos.front ?? "",
-      entry.photos.side ?? "",
-      entry.photos.back ?? "",
+      serializePhotoCell(
+        entry.photos.front ??
+          (getPhotoOriginalUri(entry.photos, "front") ?? undefined),
+      ),
+      serializePhotoCell(
+        entry.photos.side ??
+          (getPhotoOriginalUri(entry.photos, "side") ?? undefined),
+      ),
+      serializePhotoCell(
+        entry.photos.back ??
+          (getPhotoOriginalUri(entry.photos, "back") ?? undefined),
+      ),
       JSON.stringify(entry.measurements),
       entry.notes ?? null,
     ],
@@ -187,10 +225,13 @@ function normalizeMeasurements(raw: unknown): Entry["measurements"] {
 }
 
 function rowToEntry(r: EntryRow): Entry {
-  const photos: Partial<Record<PhotoAngle, string>> = {}
-  if (r.photo_front) photos.front = r.photo_front
-  if (r.photo_side) photos.side = r.photo_side
-  if (r.photo_back) photos.back = r.photo_back
+  const photos: Entry["photos"] = {}
+  const front = parsePhotoCell(r.photo_front)
+  const side = parsePhotoCell(r.photo_side)
+  const back = parsePhotoCell(r.photo_back)
+  if (front) photos.front = front
+  if (side) photos.side = side
+  if (back) photos.back = back
   return {
     id: r.id,
     createdAt: new Date(r.created_at),

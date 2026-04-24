@@ -10,7 +10,16 @@ export interface Entry {
   id: string
   createdAt: Date
   /** At least one angle should be present for a saved entry; others may be skipped. */
-  photos: Partial<Record<PhotoAngle, string>>
+  photos: Partial<
+    Record<
+      PhotoAngle,
+      | string
+      | {
+          originalEncUri: string
+          thumbEncUri?: string
+        }
+    >
+  >
   measurements: {
     neck?: CircumferenceMeasure
     chest?: CircumferenceMeasure

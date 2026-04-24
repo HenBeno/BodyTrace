@@ -9,6 +9,7 @@ const DEVICE_SECRET_KEY = "bodytrace.deviceSecret"
 const PHOTO_KEY_STORAGE = "bodytrace.photoKey"
 
 const NONCE_LEN = nacl.secretbox.nonceLength
+const resolveInFlight = new Map<string, Promise<string>>()
 
 /**
  * Ensures a stable on-device secret exists (SecureStore / keychain).
@@ -78,25 +79,37 @@ export async function resolvePhotoUriForDisplay(uri: string): Promise<string> {
 
   const tail = uri.replace(/[^\w.-]+/g, "_")
   const outUri = `${base}bodytrace-dec-${tail.slice(-96)}.jpg`
+  const cached = await FileSystem.getInfoAsync(outUri)
+  if (cached.exists) return outUri
 
-  const info = await FileSystem.getInfoAsync(outUri)
-  if (info.exists) {
+  const running = resolveInFlight.get(outUri)
+  if (running) return running
+
+  const resolver = (async () => {
+    const info = await FileSystem.getInfoAsync(outUri)
+    if (info.exists) return outUri
+
+    const encB64 = await FileSystem.readAsStringAsync(uri, {
+      encoding: FileSystem.EncodingType.Base64,
+    })
+    const combined = decodeBase64(encB64)
+    const nonce = combined.slice(0, NONCE_LEN)
+    const boxed = combined.slice(NONCE_LEN)
+    const key = await getPhotoKey()
+    const plain = nacl.secretbox.open(boxed, nonce, key)
+    if (!plain) {
+      throw new Error("Could not decrypt photo")
+    }
+    await FileSystem.writeAsStringAsync(outUri, encodeBase64(plain), {
+      encoding: FileSystem.EncodingType.Base64,
+    })
     return outUri
-  }
+  })()
 
-  const encB64 = await FileSystem.readAsStringAsync(uri, {
-    encoding: FileSystem.EncodingType.Base64,
-  })
-  const combined = decodeBase64(encB64)
-  const nonce = combined.slice(0, NONCE_LEN)
-  const boxed = combined.slice(NONCE_LEN)
-  const key = await getPhotoKey()
-  const plain = nacl.secretbox.open(boxed, nonce, key)
-  if (!plain) {
-    throw new Error("Could not decrypt photo")
+  resolveInFlight.set(outUri, resolver)
+  try {
+    return await resolver
+  } finally {
+    resolveInFlight.delete(outUri)
   }
-  await FileSystem.writeAsStringAsync(outUri, encodeBase64(plain), {
-    encoding: FileSystem.EncodingType.Base64,
-  })
-  return outUri
 }

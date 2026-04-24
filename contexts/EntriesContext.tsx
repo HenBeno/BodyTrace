@@ -19,6 +19,7 @@ import {
   deleteEntryMediaFolder,
   persistEntryPhotos,
 } from "@/services/mediaStore"
+import { getPhotoOriginalUri } from "@/utils/photos"
 
 function sortByDateDesc(a: Entry, b: Entry) {
   return b.createdAt.getTime() - a.createdAt.getTime()
@@ -123,7 +124,7 @@ export function EntriesProvider({ children }: { children: React.ReactNode }) {
         const sorted = [...entries].sort(sortByDateAsc)
         ref = sorted[0]
       }
-      return ref?.photos[angle] ?? null
+      return ref ? getPhotoOriginalUri(ref.photos, angle) : null
     },
     [entries],
   )

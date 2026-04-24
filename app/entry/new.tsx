@@ -195,9 +195,19 @@ export default function NewEntryScreen() {
     }
     try {
       setSaving(true)
+      const saveStart = Date.now()
       await addEntry(entry)
+      if (__DEV__) {
+        console.log(
+          `[perf] save->persist+db ${Date.now() - saveStart}ms for ${capturedCount} photo(s)`,
+        )
+      }
       success()
+      const navStart = Date.now()
       router.replace(`/entry/${id}`)
+      if (__DEV__) {
+        console.log(`[perf] persist->navigate ${Date.now() - navStart}ms`)
+      }
     } catch (e) {
       Alert.alert(
         "Could not save",

@@ -1,0 +1,8 @@
+alwaysApply: true
+---
+# Formatting Gate
+# Quality Gates
+After completing any code changes, run:
+`npm run format:check`
+`npm run typecheck`
+If it fails because of files you touched, fix formatting before finishing.

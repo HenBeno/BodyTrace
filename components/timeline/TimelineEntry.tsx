@@ -8,6 +8,7 @@ import Animated, { FadeInDown } from "react-native-reanimated"
 import { ResolvedExpoImage } from "@/components/media/ResolvedExpoImage"
 import type { Entry } from "@/types"
 import { formatMeasurementDisplay } from "@/utils/measurements"
+import { getPhotoPreferredUri } from "@/utils/photos"
 import { theme } from "@/utils/theme"
 
 function formatDate(d: Date) {
@@ -41,7 +42,10 @@ function measurementChips(entry: Entry): { label: string; value: string }[] {
 export function TimelineEntry({ entry, index, isLast }: TimelineEntryProps) {
   const chips = measurementChips(entry)
   const summaryEmpty = chips.length === 0
-  const heroUri = entry.photos.front ?? entry.photos.side ?? entry.photos.back
+  const heroUri =
+    getPhotoPreferredUri(entry.photos, "front") ??
+    getPhotoPreferredUri(entry.photos, "side") ??
+    getPhotoPreferredUri(entry.photos, "back")
   return (
     <Link href={`/entry/${entry.id}`} asChild>
       <Pressable accessibilityRole="button">

@@ -16,11 +16,14 @@ import { Card } from "@/components/ui/Card"
 import { useEntries } from "@/contexts/EntriesContext"
 import { MEASUREMENT_LABELS } from "@/utils/constants"
 import { formatMeasurementDisplay } from "@/utils/measurements"
+import { getPhotoPreferredUri } from "@/utils/photos"
 import { theme } from "@/utils/theme"
 
 export default function EntryDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const { entries, ready, removeEntry } = useEntries()
+  const detailOpenedAt = React.useRef(Date.now())
+  const firstPreviewLogged = React.useRef(false)
 
   const entry = useMemo(() => entries.find((e) => e.id === id), [entries, id])
 
@@ -107,7 +110,7 @@ export default function EntryDetailScreen() {
         >
           <View className="mb-5 flex-row gap-2">
             {(["front", "side", "back"] as const).map((angle) => {
-              const uri = entry.photos[angle]
+              const uri = getPhotoPreferredUri(entry.photos, angle)
               return (
                 <View
                   key={angle}
@@ -118,6 +121,15 @@ export default function EntryDetailScreen() {
                       uri={uri}
                       style={{ width: "100%", aspectRatio: 3 / 4 }}
                       contentFit="cover"
+                      onResolved={() => {
+                        if (!__DEV__ || firstPreviewLogged.current) return
+                        firstPreviewLogged.current = true
+                        console.log(
+                          `[perf] detail first-preview ${
+                            Date.now() - detailOpenedAt.current
+                          }ms`,
+                        )
+                      }}
                     />
                   ) : (
                     <View
