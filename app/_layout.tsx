@@ -14,7 +14,7 @@ import { useFonts } from "expo-font"
 import { Stack } from "expo-router"
 import * as SplashScreen from "expo-splash-screen"
 import { useEffect, useMemo } from "react"
-import { useColorScheme } from "react-native"
+import { I18nManager, useColorScheme } from "react-native"
 /* eslint-disable import/no-duplicates -- RNGH requires side-effect import before named import from same package */
 import "react-native-gesture-handler"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
@@ -36,6 +36,8 @@ export const unstable_settings = {
 }
 
 SplashScreen.preventAutoHideAsync()
+I18nManager.allowRTL(false)
+I18nManager.forceRTL(false)
 
 const VaultDarkTheme = {
   ...DarkTheme,
@@ -107,6 +109,7 @@ function RootLayoutNav() {
     <GestureHandlerRootView
       style={{
         flex: 1,
+        direction: "ltr",
         backgroundColor: isDark ? theme.canvas : "#f8fafc",
       }}
       className="font-sans"
