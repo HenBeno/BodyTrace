@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react"
+import { BlurView } from "expo-blur"
 import {
   ActivityIndicator,
   AppState,
+  Platform,
   StyleSheet,
   Text,
   View,
@@ -55,19 +57,28 @@ export function SecurityGate({ children }: { children: React.ReactNode }) {
         {children}
       </View>
       {locked ? (
-        <View
-          style={StyleSheet.absoluteFillObject}
-          className="items-center justify-center bg-canvas px-6"
-          pointerEvents="auto"
-        >
-          <Text className="text-center font-inter-bold text-2xl text-white">
-            BodyTrace locked
-          </Text>
-          <Text className="mt-3 text-center font-inter-medium text-base text-vault-muted">
-            Confirm it is you to view your timeline and photos.
-          </Text>
-          <View className="mt-8 w-full max-w-xs">
-            <Button title="Unlock with biometrics" onPress={onUnlock} />
+        <View style={StyleSheet.absoluteFillObject} pointerEvents="auto">
+          <BlurView
+            style={StyleSheet.absoluteFillObject}
+            intensity={100}
+            tint="dark"
+            experimentalBlurMethod={
+              Platform.OS === "android" ? "dimezisBlurView" : undefined
+            }
+          />
+          <View
+            style={StyleSheet.absoluteFillObject}
+            className="items-center justify-center bg-black/45 px-6"
+          >
+            <Text className="text-center font-inter-bold text-2xl text-white">
+              BodyTrace locked
+            </Text>
+            <Text className="mt-3 text-center font-inter-medium text-base text-slate-200">
+              Confirm it is you to view your timeline and photos.
+            </Text>
+            <View className="mt-8 w-full max-w-xs">
+              <Button title="Unlock with biometrics" onPress={onUnlock} />
+            </View>
           </View>
         </View>
       ) : null}
