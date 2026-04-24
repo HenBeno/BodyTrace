@@ -3,7 +3,10 @@ import React from "react"
 import { Text, View } from "react-native"
 
 import { MedalProgress } from "@/components/medals/MedalProgress"
-import type { MedalFamily, MedalProgress as MedalProgressModel } from "@/utils/medals"
+import type {
+  MedalFamily,
+  MedalProgress as MedalProgressModel,
+} from "@/utils/medals"
 import { theme } from "@/utils/theme"
 
 const tierClasses = {
@@ -76,7 +79,9 @@ export function MedalCard({ medal }: MedalCardProps) {
       <View className="mt-3 flex-row items-center gap-1.5 rounded-2xl bg-accent/10 px-3 py-2">
         <Dumbbell size={14} color={theme.accent} />
         <Text className="text-xs text-slate-700 dark:text-vault-muted">
-          {medal.unlocked ? "Medal unlocked - keep going for the next tier." : actionCopy(medal)}
+          {medal.unlocked
+            ? "Medal unlocked - keep going for the next tier."
+            : actionCopy(medal)}
         </Text>
       </View>
     </View>

@@ -1,0 +1,17 @@
+---
+description: Enforce full quality gate after agent edits
+alwaysApply: true
+---
+
+# Quality Gate After Edits
+
+After any code edit, the agent must run the full quality gate before finishing:
+
+1. `npm run format:check`
+2. `npm run typecheck`
+3. `npm run lint`
+4. `npm run test:ci`
+
+If one of these fails, the agent must fix the issue and rerun the full sequence until all checks pass.
+
+Do not finish the task while the quality gate is failing.

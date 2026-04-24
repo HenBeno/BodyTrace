@@ -18,9 +18,7 @@ function serializePhotoCell(photo: Entry["photos"][PhotoAngle]): string {
   return typeof photo === "string" ? photo : JSON.stringify(photo)
 }
 
-function parsePhotoCell(
-  raw: string,
-): Entry["photos"][PhotoAngle] | undefined {
+function parsePhotoCell(raw: string): Entry["photos"][PhotoAngle] | undefined {
   if (!raw) return undefined
   if (!raw.startsWith("{")) return raw
   try {
@@ -40,7 +38,6 @@ function parsePhotoCell(
     return raw
   }
 }
-
 
 let dbInstance: SQLite.SQLiteDatabase | null = null
 let initOnce: Promise<void> | null = null
@@ -103,15 +100,18 @@ async function insertEntryInternal(
       entry.createdAt.getTime(),
       serializePhotoCell(
         entry.photos.front ??
-          (getPhotoOriginalUri(entry.photos, "front") ?? undefined),
+          getPhotoOriginalUri(entry.photos, "front") ??
+          undefined,
       ),
       serializePhotoCell(
         entry.photos.side ??
-          (getPhotoOriginalUri(entry.photos, "side") ?? undefined),
+          getPhotoOriginalUri(entry.photos, "side") ??
+          undefined,
       ),
       serializePhotoCell(
         entry.photos.back ??
-          (getPhotoOriginalUri(entry.photos, "back") ?? undefined),
+          getPhotoOriginalUri(entry.photos, "back") ??
+          undefined,
       ),
       JSON.stringify(entry.measurements),
       entry.notes ?? null,

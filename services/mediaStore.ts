@@ -53,7 +53,10 @@ export async function persistEntryPhotos(
     const originalDest = `${dir}${angle}.jpg`
     const thumbDest = `${dir}${angle}.thumb.jpg`
     if (uri.startsWith("http://") || uri.startsWith("https://")) {
-      const { uri: downloaded } = await FileSystem.downloadAsync(uri, originalDest)
+      const { uri: downloaded } = await FileSystem.downloadAsync(
+        uri,
+        originalDest,
+      )
       const thumbEncUri = await createEncryptedThumb(downloaded, thumbDest)
       const originalEncUri = await encryptPlainFileAtUriToEnc(downloaded)
       out[angle] = { originalEncUri, thumbEncUri }

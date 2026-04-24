@@ -8,7 +8,9 @@ export interface StoredPhotoAsset {
 export type EntryPhotoValue = string | StoredPhotoAsset
 export type EntryPhotos = Partial<Record<PhotoAngle, EntryPhotoValue>>
 
-export function isStoredPhotoAsset(value: EntryPhotoValue): value is StoredPhotoAsset {
+export function isStoredPhotoAsset(
+  value: EntryPhotoValue,
+): value is StoredPhotoAsset {
   return typeof value === "object" && value != null && "originalEncUri" in value
 }
 

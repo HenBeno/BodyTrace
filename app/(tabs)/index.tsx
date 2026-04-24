@@ -68,7 +68,10 @@ export default function HomeScreen() {
     () => getConsecutiveDayStreak(entries.map((e) => e.createdAt)),
     [entries],
   )
-  const medalsSnapshot = useMemo(() => computeMedalsProgress(entries), [entries])
+  const medalsSnapshot = useMemo(
+    () => computeMedalsProgress(entries),
+    [entries],
+  )
 
   const header = (
     <View>

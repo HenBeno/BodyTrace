@@ -153,7 +153,9 @@ function startOfDay(date: Date) {
 
 export function getConsecutiveDayStreak(dates: Date[]) {
   if (dates.length === 0) return 0
-  const unique = Array.from(new Set(dates.map(startOfDay))).sort((a, b) => b - a)
+  const unique = Array.from(new Set(dates.map(startOfDay))).sort(
+    (a, b) => b - a,
+  )
   let streak = 1
   for (let i = 1; i < unique.length; i += 1) {
     const diff = unique[i - 1] - unique[i]
@@ -212,7 +214,9 @@ export function computeMedalsProgress(
   definitions: MedalDefinition[] = MEDAL_DEFINITIONS,
 ): MedalsSnapshot {
   const metrics = {
-    currentStreakDays: getConsecutiveDayStreak(entries.map((entry) => entry.createdAt)),
+    currentStreakDays: getConsecutiveDayStreak(
+      entries.map((entry) => entry.createdAt),
+    ),
     totalCheckins: entries.length,
     fullCaptureCheckins: getFullCaptureCount(entries),
     bestWeightLossKg: getBestWeightLossKg(entries),
