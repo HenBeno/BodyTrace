@@ -1,9 +1,10 @@
 import { Stack } from "expo-router"
 import React, { useMemo } from "react"
-import { ActivityIndicator, View, useColorScheme } from "react-native"
+import { View, useColorScheme } from "react-native"
 
 import { SecurityGate } from "@/components/auth/SecurityGate"
 import { useAuthRedirect } from "@/components/auth/useAuthRedirect"
+import { FlexingArmLoader } from "@/components/ui/FlexingArmLoader"
 import { useAuth } from "@/contexts/AuthContext"
 import { EntriesProvider } from "@/contexts/EntriesContext"
 import { theme } from "@/utils/theme"
@@ -22,11 +23,16 @@ export function AppNavigation() {
   )
 
   const securityGateEnabled = Boolean(session?.user && !needsOnboarding)
+  const initialRouteName = needsOnboarding
+    ? "(onboarding)"
+    : session?.user
+      ? "(tabs)"
+      : "(auth)"
 
   if (!authReady) {
     return (
       <View className="flex-1 items-center justify-center bg-slate-50 dark:bg-canvas">
-        <ActivityIndicator color={theme.accent} />
+        <FlexingArmLoader />
       </View>
     )
   }
@@ -35,6 +41,7 @@ export function AppNavigation() {
     <SecurityGate enabled={securityGateEnabled}>
       <EntriesProvider>
         <Stack
+          initialRouteName={initialRouteName}
           screenOptions={{
             contentStyle: stackBg,
             animation: "slide_from_right",

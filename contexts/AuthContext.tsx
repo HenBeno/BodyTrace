@@ -33,7 +33,6 @@ export interface AuthContextValue {
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
-const AUTH_BOOTSTRAP_TIMEOUT_MS = 1_500
 const PROFILE_FETCH_TIMEOUT_MS = 5_000
 
 function toError(err: unknown): Error {
@@ -111,16 +110,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     ;(async () => {
       try {
-        const { data } = await withTimeout(
-          supabase.auth.getSession(),
-          AUTH_BOOTSTRAP_TIMEOUT_MS,
-          "Auth bootstrap",
-        )
+        const { data } = await supabase.auth.getSession()
         if (cancelled) return
         setSession(data.session ?? null)
         const uid = data.session?.user?.id
         if (uid) {
-          void loadProfile(uid)
+          await loadProfile(uid)
         } else {
           setProfile(null)
         }
