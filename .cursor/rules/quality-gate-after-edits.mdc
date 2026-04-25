@@ -8,9 +8,10 @@ alwaysApply: true
 After any code edit, the agent must run the full quality gate before finishing:
 
 1. `npm run format:check`
-2. `npm run typecheck`
-3. `npm run lint`
-4. `npm run test:ci`
+2. `npx expo-doctor`
+3. `npm run typecheck`
+4. `npm run lint`
+5. `npm run test:ci`
 
 If one of these fails, the agent must fix the issue and rerun the full sequence until all checks pass.
 
