@@ -33,10 +33,34 @@ export interface AuthContextValue {
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
+const AUTH_BOOTSTRAP_TIMEOUT_MS = 1_500
+const PROFILE_FETCH_TIMEOUT_MS = 5_000
 
 function toError(err: unknown): Error {
   if (err instanceof Error) return err
   return new Error(typeof err === "string" ? err : "Unknown error")
+}
+
+function withTimeout<T>(
+  promise: Promise<T>,
+  timeoutMs: number,
+  label: string,
+): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      reject(new Error(`${label} timed out after ${timeoutMs}ms`))
+    }, timeoutMs)
+
+    promise
+      .then((value) => {
+        clearTimeout(timeout)
+        resolve(value)
+      })
+      .catch((error: unknown) => {
+        clearTimeout(timeout)
+        reject(error)
+      })
+  })
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -52,7 +76,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     setProfileLoading(true)
     try {
-      const row = await fetchProfileForUser(userId)
+      const row = await withTimeout(
+        fetchProfileForUser(userId),
+        PROFILE_FETCH_TIMEOUT_MS,
+        "Profile fetch",
+      )
       setProfile(row)
     } catch {
       setProfile(null)
@@ -83,12 +111,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     ;(async () => {
       try {
-        const { data } = await supabase.auth.getSession()
+        const { data } = await withTimeout(
+          supabase.auth.getSession(),
+          AUTH_BOOTSTRAP_TIMEOUT_MS,
+          "Auth bootstrap",
+        )
         if (cancelled) return
         setSession(data.session ?? null)
         const uid = data.session?.user?.id
         if (uid) {
-          await loadProfile(uid)
+          void loadProfile(uid)
         } else {
           setProfile(null)
         }

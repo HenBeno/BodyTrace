@@ -1,6 +1,6 @@
 import { Link } from "expo-router"
 import { Flame, Plus, Sparkles, Target } from "lucide-react-native"
-import React, { useMemo } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { Text, useColorScheme, View } from "react-native"
 import Animated, {
   FadeInDown,
@@ -63,7 +63,23 @@ function FloatingNewEntryCta() {
 
 export default function HomeScreen() {
   const { entries, ready } = useEntries()
+  const hasEntries = entries.length > 0
+  const [isAtTop, setIsAtTop] = useState(true)
   const isDark = useColorScheme() === "dark"
+
+  useEffect(() => {
+    if (!hasEntries) {
+      setIsAtTop(true)
+    }
+  }, [hasEntries])
+
+  const onAtTopChange = useCallback((atTop: boolean) => {
+    setIsAtTop((prev) => (prev !== atTop ? atTop : prev))
+  }, [])
+
+  const showHeaderNew = hasEntries && isAtTop
+  const showFloatingNew = hasEntries && !isAtTop
+
   const streak = useMemo(
     () => getConsecutiveDayStreak(entries.map((e) => e.createdAt)),
     [entries],
@@ -81,19 +97,21 @@ export default function HomeScreen() {
         subtitle="Keep momentum with quick check-ins. Tiny steps, visible change."
         leftAccessory={<Sparkles size={26} color={theme.accent} />}
         right={
-          <Link href="/entry/new" asChild>
-            <PressableScale
-              accessibilityRole="button"
-              accessibilityLabel="New entry"
-              accessibilityHint="Opens the camera flow to add a timeline checkpoint"
-              className="flex-row items-center gap-1.5 rounded-2xl border border-cyan-300/35 bg-accent px-3.5 py-2.5 shadow-vault"
-            >
-              <Plus size={18} color={theme.canvas} />
-              <Text className="font-inter-semibold text-sm text-canvas">
-                New
-              </Text>
-            </PressableScale>
-          </Link>
+          showHeaderNew ? (
+            <Link href="/entry/new" asChild>
+              <PressableScale
+                accessibilityRole="button"
+                accessibilityLabel="New entry"
+                accessibilityHint="Opens the camera flow to add a timeline checkpoint"
+                className="flex-row items-center gap-1.5 rounded-2xl border border-cyan-300/35 bg-accent px-3.5 py-2.5 shadow-vault"
+              >
+                <Plus size={18} color={theme.canvas} />
+                <Text className="font-inter-semibold text-sm text-canvas">
+                  New
+                </Text>
+              </PressableScale>
+            </Link>
+          ) : undefined
         }
       />
       <Animated.View
@@ -148,8 +166,13 @@ export default function HomeScreen() {
     <SafeAreaView className="flex-1" edges={["top"]}>
       <View className="flex-1">
         <FuturisticBackground isDark={isDark} />
-        <TimelineList entries={entries} ListHeaderComponent={header} />
-        <FloatingNewEntryCta />
+        <TimelineList
+          entries={entries}
+          ListHeaderComponent={header}
+          showEmptyNewEntryCta={!hasEntries}
+          onAtTopChange={onAtTopChange}
+        />
+        {showFloatingNew ? <FloatingNewEntryCta /> : null}
       </View>
     </SafeAreaView>
   )

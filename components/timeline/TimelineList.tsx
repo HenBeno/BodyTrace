@@ -4,6 +4,8 @@ import React, { useCallback } from "react"
 import {
   FlatList,
   ListRenderItem,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
   RefreshControl,
   Text,
   useColorScheme,
@@ -19,12 +21,19 @@ import { space, theme } from "@/utils/theme"
 
 import { TimelineEntry } from "./TimelineEntry"
 
+/** Pixels from top; offsets at or below this count as "at top" to reduce flicker. */
+const SCROLL_TOP_THRESHOLD_PX = 12
+
 export interface TimelineListProps {
   entries: Entry[]
   ListHeaderComponent?: React.ReactElement | null
+  /** When false, empty state hides the primary CTA (parent controls single-button policy). */
+  showEmptyNewEntryCta?: boolean
+  /** Fired when scroll position crosses the top threshold (list at top vs scrolled). */
+  onAtTopChange?: (atTop: boolean) => void
 }
 
-function EmptyState() {
+function EmptyState({ showNewEntryCta }: { showNewEntryCta: boolean }) {
   return (
     <View className="w-full flex-1 justify-center px-1 pb-6 pt-4">
       <Animated.View
@@ -41,18 +50,20 @@ function EmptyState() {
           <Text className="mt-2 text-center text-base leading-6 text-slate-600 dark:text-vault-muted">
             Capture front, side, and back — saved only on your device.
           </Text>
-          <Link href="/entry/new" asChild>
-            <PressableScale
-              accessibilityRole="button"
-              accessibilityLabel="Create new entry"
-              accessibilityHint="Opens the camera to capture progress photos"
-              className="mt-8 min-h-[52px] w-full items-center justify-center rounded-2xl bg-accent px-8"
-            >
-              <Text className="text-center font-inter-semibold text-base text-canvas">
-                New entry
-              </Text>
-            </PressableScale>
-          </Link>
+          {showNewEntryCta ? (
+            <Link href="/entry/new" asChild>
+              <PressableScale
+                accessibilityRole="button"
+                accessibilityLabel="Create new entry"
+                accessibilityHint="Opens the camera to capture progress photos"
+                className="mt-8 min-h-[52px] w-full items-center justify-center rounded-2xl bg-accent px-8"
+              >
+                <Text className="text-center font-inter-semibold text-base text-canvas">
+                  New entry
+                </Text>
+              </PressableScale>
+            </Link>
+          ) : null}
         </View>
       </Animated.View>
     </View>
@@ -62,6 +73,8 @@ function EmptyState() {
 export function TimelineList({
   entries,
   ListHeaderComponent,
+  showEmptyNewEntryCta = true,
+  onAtTopChange,
 }: TimelineListProps) {
   const { refreshEntries, refreshing } = useEntries()
   const colorScheme = useColorScheme()
@@ -70,6 +83,16 @@ export function TimelineList({
     await refreshEntries()
     success()
   }, [refreshEntries])
+
+  const handleScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      if (!onAtTopChange) return
+      const y = event.nativeEvent.contentOffset.y
+      const atTop = y <= SCROLL_TOP_THRESHOLD_PX
+      onAtTopChange(atTop)
+    },
+    [onAtTopChange],
+  )
 
   const renderItem: ListRenderItem<Entry> = ({ item, index }) => (
     <TimelineEntry
@@ -85,7 +108,9 @@ export function TimelineList({
       keyExtractor={(item) => item.id}
       renderItem={renderItem}
       ListHeaderComponent={ListHeaderComponent ?? undefined}
-      ListEmptyComponent={<EmptyState />}
+      ListEmptyComponent={<EmptyState showNewEntryCta={showEmptyNewEntryCta} />}
+      onScroll={onAtTopChange ? handleScroll : undefined}
+      scrollEventThrottle={onAtTopChange ? 16 : undefined}
       initialNumToRender={8}
       maxToRenderPerBatch={8}
       windowSize={11}

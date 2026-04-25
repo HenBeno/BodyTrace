@@ -12,7 +12,7 @@ export function AppNavigation() {
   useAuthRedirect()
   const colorScheme = useColorScheme()
   const isDark = colorScheme === "dark"
-  const { authReady, session, profileLoading, needsOnboarding } = useAuth()
+  const { authReady, session, needsOnboarding } = useAuth()
 
   const stackBg = useMemo(
     () => ({
@@ -24,14 +24,6 @@ export function AppNavigation() {
   const securityGateEnabled = Boolean(session?.user && !needsOnboarding)
 
   if (!authReady) {
-    return (
-      <View className="flex-1 items-center justify-center bg-slate-50 dark:bg-canvas">
-        <ActivityIndicator color={theme.accent} />
-      </View>
-    )
-  }
-
-  if (session?.user && profileLoading) {
     return (
       <View className="flex-1 items-center justify-center bg-slate-50 dark:bg-canvas">
         <ActivityIndicator color={theme.accent} />
