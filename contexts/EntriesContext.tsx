@@ -57,17 +57,14 @@ export interface EntriesContextValue {
 const EntriesContext = createContext<EntriesContextValue | undefined>(undefined)
 
 export function EntriesProvider({ children }: { children: React.ReactNode }) {
-  const { session, needsOnboarding } = useAuth()
+  const { session } = useAuth()
   const [entries, setEntries] = useState<Entry[]>([])
   const [ready, setReady] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
 
   const userId = session?.user?.id
   const shouldCloudSync =
-    Platform.OS !== "web" &&
-    isSupabaseConfigured &&
-    Boolean(userId) &&
-    !needsOnboarding
+    Platform.OS !== "web" && isSupabaseConfigured && Boolean(userId)
 
   useEffect(() => {
     let cancelled = false
